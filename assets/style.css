@@ -1,0 +1,45 @@
+@font-face {
+  font-family: 'SetoFont';
+  src: url('fonts/setofont.ttf') format('truetype');
+}
+
+body {
+    margin: 0;
+    font-family: "SetoFont", "標楷體", sans-serif;
+    background-color: #fff0f5;
+    color: #5a3e45;
+  }
+  
+  header {
+    background-color: #ffc0cb;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  h1 {
+    margin: 0;
+    font-size: 1.8rem;
+  }
+  
+  nav a {
+    margin-left: 1rem;
+    text-decoration: none;
+    color: #5a3e45;
+    font-weight: bold;
+  }
+  
+  .hero {
+    background: linear-gradient(to bottom, #ffe4e1, #fff0f5);
+    text-align: center;
+    padding: 100px 20px;
+  }
+  
+  .content {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
