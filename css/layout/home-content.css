@@ -183,7 +183,7 @@
   font-size: 1.4rem;
   line-height: 1.5;
   color: var(--second-text-color);
-  font-family: 'Geist Variable', 'setofont Variable', 'Noto Sans SC', sans-serif;
+  font-family: 'setofont Variable', 'setofont Variable', 'Noto Sans SC', sans-serif;
   margin: 0;
 }
 @media (max-width: 768px) {

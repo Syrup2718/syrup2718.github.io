@@ -1,11 +1,9 @@
 @font-face {
-    font-family: 'setofont Variable';
-    src: local('/fonts/Setofont/setofont.ttf'),
-    local('setofontVariable'),
-    url('setofont.ttf') format('truetype'),
-    url('setofont.woff') format('woff'),
-    url('setofont.woff2') format('woff2');
-  /* 如果你用的是 woff2，則改為：format('woff2') */
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'Setofont Variable';
+  src: 
+    url('/fonts/Setofont/setofont.woff2') format('woff2'),
+    url('/fonts/Setofont/setofont.woff') format('woff'),
+    url('/fonts/Setofont/setofont.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
