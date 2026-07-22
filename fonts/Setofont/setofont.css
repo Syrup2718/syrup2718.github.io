@@ -1,9 +1,0 @@
-@font-face {
-  font-family: 'Setofont Variable';
-  src: 
-    url('/fonts/Setofont/setofont.woff2') format('woff2'),
-    url('/fonts/Setofont/setofont.woff') format('woff'),
-    url('/fonts/Setofont/setofont.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
