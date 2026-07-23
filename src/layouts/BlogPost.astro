@@ -7,7 +7,7 @@ import Header from '../components/Header.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags } = Astro.props;
 ---
 
 <!doctype html>
@@ -29,6 +29,15 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
           <time style="display: block; font-size: 0.875rem; color: var(--muted); margin-bottom: 0.75rem;">
             {pubDate.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })}
           </time>
+          {tags && tags.length > 0 && (
+            <div style="display: flex; flex-wrap: wrap; gap: 0.375rem; margin-bottom: 1rem;">
+              {tags.map((tag) => (
+                <span style="font-size: 0.75rem; padding: 0.25rem 0.625rem; background: var(--accent-light); color: var(--accent); border-radius: 4px; font-weight: 500;">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
           <h1 style="margin: 0; font-size: clamp(2rem, 4.5vw, 2.75rem); font-weight: 500; line-height: 1.25; letter-spacing: -0.02em;">
             {title}
           </h1>

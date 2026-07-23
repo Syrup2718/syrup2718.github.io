@@ -1,0 +1,290 @@
+<!DOCTYPE html><html lang="zh-TW"><head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" href="/favicon.ico"><link rel="sitemap" href="/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="糖漿の小窩" href="https://syrup2718.github.io/rss.xml"><meta name="generator" content="Astro v7.1.3"><!-- Preload Setofont --><link rel="preload" as="font" type="font/woff2" href="/fonts/setofont/setofont.woff2" crossorigin><!-- FontIcon (fi) --><link rel="stylesheet" href="https://cdn.fonticon.dev/fi.css"><!-- Font Awesome --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer"><!-- Canonical URL --><link rel="canonical" href="https://syrup2718.github.io/blog/first-post/"><!-- Primary Meta Tags --><title>First post</title><meta name="description" content="Lorem ipsum dolor sit amet"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="http://localhost:4321/blog/first-post/"><meta property="og:title" content="First post"><meta property="og:description" content="Lorem ipsum dolor sit amet"><meta property="og:image" content="http://localhost:4321/@fs/D:/Programming/GitHub/syrup2718.github.io/src/assets/blog-placeholder-3.jpg?origWidth=960&amp;origHeight=480&amp;origFormat=jpg"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><style data-vite-dev-id="D:/Programming/GitHub/syrup2718.github.io/src/styles/global.css">@font-face {
+  font-family: 'Setofont Variable';
+  src: url('/fonts/setofont/setofont.woff2') format('woff2'),
+       url('/fonts/setofont/setofont.woff') format('woff');
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg: #fdfbf7;
+  --fg: #2d2a26;
+  --muted: #8a847c;
+  --muted-light: #c9c3ba;
+  --border: #efe8e0;
+  --accent: #d4a5a5;
+  --accent-hover: #c99393;
+  --accent-light: #f5e6e6;
+  --card: #ffffff;
+  --font-seto: 'Setofont Variable', system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-seto);
+  font-size: 20px;
+  line-height: 1.8;
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 0.75rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--fg);
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: clamp(2rem, 5vw, 2.75rem); }
+h2 { font-size: clamp(1.5rem, 3.5vw, 2rem); }
+h3 { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
+h4 { font-size: 1.125rem; }
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--accent-hover);
+}
+
+p {
+  margin: 0 0 1.5rem;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+  font-size: 0.9em;
+  padding: 0.125em 0.375em;
+  background: var(--accent-light);
+  border-radius: 3px;
+}
+
+pre {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  background: #faf8f5;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+pre code {
+  padding: 0;
+  background: none;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+blockquote {
+  margin: 1.5rem 0;
+  padding: 0.75rem 0 0.75rem 1.25rem;
+  border-left: 3px solid var(--accent);
+  color: var(--muted);
+  font-size: 1.0625rem;
+  font-style: italic;
+  background: var(--accent-light);
+  border-radius: 0 8px 8px 0;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+ul, ol {
+  padding-left: 1.5rem;
+  margin: 0 0 1.5rem;
+}
+
+li {
+  margin: 0.5rem 0;
+}
+
+li::marker {
+  color: var(--accent);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9375rem;
+}
+
+th, td {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+th {
+  background: var(--accent-light);
+  font-weight: 500;
+}
+
+::selection {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+@media (max-width: 640px) {
+  body {
+    font-size: 18px;
+  }
+  main {
+    padding: 2rem 1rem;
+  }
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.5rem; }
+  blockquote {
+    padding: 0.75rem 0 0.75rem 1rem;
+    font-size: 1rem;
+  }
+}</style><style data-vite-dev-id="D:/Programming/GitHub/syrup2718.github.io/src/components/Footer.astro?astro&amp;type=style&amp;index=0&amp;lang.css">footer[data-astro-cid-jo6i4kqk] {
+  padding: 2.5rem 1.5rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--muted);
+  font-size: .875rem;
+  background: var(--bg);
+}
+
+.uptime[data-astro-cid-jo6i4kqk] {
+  margin-top: .75rem;
+  font-size: .8125rem;
+  color: var(--accent);
+}
+
+.uptime[data-astro-cid-jo6i4kqk] span[data-astro-cid-jo6i4kqk] {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (width <= 640px) {
+  footer[data-astro-cid-jo6i4kqk] {
+    padding: 2rem 1rem;
+    font-size: .8125rem;
+  }
+
+  .uptime[data-astro-cid-jo6i4kqk] {
+    font-size: .75rem;
+  }
+}
+</style><style data-vite-dev-id="D:/Programming/GitHub/syrup2718.github.io/src/components/HeaderLink.astro?astro&amp;type=style&amp;index=0&amp;lang.css">a[data-astro-cid-evkijfd6] {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  text-decoration: none;
+}
+
+i[data-astro-cid-evkijfd6] {
+  font-size: 1.125em;
+  line-height: 1;
+  flex-shrink: 0;
+}
+</style><style data-vite-dev-id="D:/Programming/GitHub/syrup2718.github.io/src/components/Header.astro?astro&amp;type=style&amp;index=0&amp;lang.css">header[data-astro-cid-nen7h5rs] {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+nav[data-astro-cid-nen7h5rs] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.site-title[data-astro-cid-nen7h5rs] {
+  display: flex;
+  align-items: center;
+  gap: .625rem;
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: var(--fg);
+  text-decoration: none;
+  letter-spacing: -.02em;
+}
+
+.site-logo[data-astro-cid-nen7h5rs] {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.site-title[data-astro-cid-nen7h5rs]:hover {
+  color: var(--accent);
+}
+
+.nav-links[data-astro-cid-nen7h5rs] {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs] {
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color .2s;
+}
+
+.nav-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]:hover, .nav-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs].active {
+  color: var(--fg);
+  font-weight: 500;
+}
+
+@media (width <= 640px) {
+  header[data-astro-cid-nen7h5rs] {
+    padding: 1rem;
+  }
+
+  .nav-links[data-astro-cid-nen7h5rs] {
+    gap: 1.25rem;
+  }
+
+  .nav-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs] {
+    font-size: .875rem;
+  }
+}
+</style><script type="module" src="/@vite/client"></script><script type="module" src="/@id/astro/runtime/client/dev-toolbar/entrypoint.js"></script><script>window.__astro_dev_toolbar__ = {"root":"D:\\Programming\\GitHub\\syrup2718.github.io\\","version":"7.1.3","debugInfo":"Astro                    v7.1.3\nNode                     v24.18.0\nSystem                   Windows (x64)\nPackage Manager          npm\nOutput                   static\nAdapter                  none\nIntegrations             @astrojs/mdx\n                         @astrojs/sitemap"}</script><script type="module" src="/src/styles/global.css"></script><script type="module" src="/src/components/Footer.astro?astro&type=style&index=0&lang.css"></script><script type="module" src="/src/components/HeaderLink.astro?astro&type=style&index=0&lang.css"></script><script type="module" src="/src/components/Header.astro?astro&type=style&index=0&lang.css"></script></head><body><header data-astro-cid-nen7h5rs><nav data-astro-cid-nen7h5rs><a href="/" class="site-title" data-astro-cid-nen7h5rs><img src="/favicon.ico" alt="" class="site-logo" width="24" height="24" data-astro-cid-nen7h5rs>糖漿の小窩</a><div class="nav-links" data-astro-cid-nen7h5rs><a href="/" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6><i class="fa-solid fa-house" aria-hidden="true" data-astro-cid-evkijfd6></i>首頁</a><a href="/blog" class="active" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6><i class="fa-regular fa-file-lines" aria-hidden="true" data-astro-cid-evkijfd6></i>筆記</a><a href="/projects" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6><i class="fa-solid fa-briefcase" aria-hidden="true" data-astro-cid-evkijfd6></i>專案</a><a href="/about" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6><i class="fa-regular fa-user" aria-hidden="true" data-astro-cid-evkijfd6></i>關於</a></div></nav></header><main><article><div style="margin-bottom: 2.5rem;"><img src="/_image?href=%2F%40fs%2FD%3A%2FProgramming%2FGitHub%2Fsyrup2718.github.io%2Fsrc%2Fassets%2Fblog-placeholder-3.jpg%3ForigWidth%3D960%26origHeight%3D480%26origFormat%3Djpg&amp;w=1020&amp;h=510&amp;f=webp" data-image-component="true" alt style="width: 100%; height: auto; display: block; border-radius: 8px;" loading="lazy" decoding="async" width="1020" height="510"></div><header style="margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border);"><time style="display: block; font-size: 0.875rem; color: var(--muted); margin-bottom: 0.75rem;">2022年7月8日</time><div style="display: flex; flex-wrap: wrap; gap: 0.375rem; margin-bottom: 1rem;"><span style="font-size: 0.75rem; padding: 0.25rem 0.625rem; background: var(--accent-light); color: var(--accent); border-radius: 4px; font-weight: 500;">astro</span><span style="font-size: 0.75rem; padding: 0.25rem 0.625rem; background: var(--accent-light); color: var(--accent); border-radius: 4px; font-weight: 500;">web-dev</span><span style="font-size: 0.75rem; padding: 0.25rem 0.625rem; background: var(--accent-light); color: var(--accent); border-radius: 4px; font-weight: 500;">tutorial</span></div><h1 style="margin: 0; font-size: clamp(2rem, 4.5vw, 2.75rem); font-weight: 500; line-height: 1.25; letter-spacing: -0.02em;">First post</h1></header><div style="font-size: 1.0625rem; line-height: 1.85;"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vitae ultricies leo integer malesuada nunc vel risus commodo viverra. Adipiscing enim eu turpis egestas pretium. Euismod elementum nisi quis eleifend quam adipiscing. In hac habitasse platea dictumst vestibulum. Sagittis purus sit amet volutpat. Netus et malesuada fames ac turpis egestas. Eget magna fermentum iaculis eu non diam phasellus vestibulum lorem. Varius sit amet mattis vulputate enim. Habitasse platea dictumst quisque sagittis. Integer quis auctor elit sed vulputate mi. Dictumst quisque sagittis purus sit amet.</p>
+<p>Morbi tristique senectus et netus. Id semper risus in hendrerit gravida rutrum quisque non tellus. Habitasse platea dictumst quisque sagittis purus sit amet. Tellus molestie nunc non blandit massa. Cursus vitae congue mauris rhoncus. Accumsan tortor posuere ac ut. Fringilla urna porttitor rhoncus dolor. Elit ullamcorper dignissim cras tincidunt lobortis. In cursus turpis massa tincidunt dui ut ornare lectus. Integer feugiat scelerisque varius morbi enim nunc. Bibendum neque egestas congue quisque egestas diam. Cras ornare arcu dui vivamus arcu felis bibendum. Dignissim suspendisse in est ante in nibh mauris. Sed tempus urna et pharetra pharetra massa massa ultricies mi.</p>
+<p>Mollis nunc sed id semper risus in. Convallis a cras semper auctor neque. Diam sit amet nisl suscipit. Lacus viverra vitae congue eu consequat ac felis donec. Egestas integer eget aliquet nibh praesent tristique magna sit amet. Eget magna fermentum iaculis eu non diam. In vitae turpis massa sed elementum. Tristique et egestas quis ipsum suspendisse ultrices. Eget lorem dolor sed viverra ipsum. Vel turpis nunc eget lorem dolor sed viverra. Posuere ac ut consequat semper viverra nam. Laoreet suspendisse interdum consectetur libero id faucibus. Diam phasellus vestibulum lorem sed risus ultricies tristique. Rhoncus dolor purus non enim praesent elementum facilisis. Ultrices tincidunt arcu non sodales neque. Tempus egestas sed sed risus pretium quam vulputate. Viverra suspendisse potenti nullam ac tortor vitae purus faucibus ornare. Fringilla urna porttitor rhoncus dolor purus non. Amet dictum sit amet justo donec enim.</p>
+<p>Mattis ullamcorper velit sed ullamcorper morbi tincidunt. Tortor posuere ac ut consequat semper viverra. Tellus mauris a diam maecenas sed enim ut sem viverra. Venenatis urna cursus eget nunc scelerisque viverra mauris in. Arcu ac tortor dignissim convallis aenean et tortor at. Curabitur gravida arcu ac tortor dignissim convallis aenean et tortor. Egestas tellus rutrum tellus pellentesque eu. Fusce ut placerat orci nulla pellentesque dignissim enim sit amet. Ut enim blandit volutpat maecenas volutpat blandit aliquam etiam. Id donec ultrices tincidunt arcu. Id cursus metus aliquam eleifend mi.</p>
+<p>Tempus quam pellentesque nec nam aliquam sem. Risus at ultrices mi tempus imperdiet. Id porta nibh venenatis cras sed felis eget velit. Ipsum a arcu cursus vitae. Facilisis magna etiam tempor orci eu lobortis elementum. Tincidunt dui ut ornare lectus sit. Quisque non tellus orci ac. Blandit libero volutpat sed cras. Nec tincidunt praesent semper feugiat nibh sed pulvinar proin gravida. Egestas integer eget aliquet nibh praesent tristique magna.</p>
+</div></article></main><footer data-start-date="2026-07-22T00:00:00+08:00" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>&copy; 2026 糖漿の小窩</p><p class="uptime" data-astro-cid-jo6i4kqk>已經陪伴你<span id="days" data-astro-cid-jo6i4kqk>0</span>天<span id="hours" data-astro-cid-jo6i4kqk>00</span>小時<span id="minutes" data-astro-cid-jo6i4kqk>00</span>分<span id="seconds" data-astro-cid-jo6i4kqk>00</span>秒啦！</p></footer><script type="module" src="/src/components/Footer.astro?astro&type=script&index=0&lang.ts"></script></body></html>
