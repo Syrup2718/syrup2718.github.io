@@ -1,0 +1,438 @@
+<!DOCTYPE html><html lang="zh-TW"><head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" href="/favicon.ico"><link rel="sitemap" href="/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="糖漿の小窩" href="https://syrup2718.github.io/rss.xml"><meta name="generator" content="Astro v7.1.3"><!-- Preload Setofont --><link rel="preload" as="font" type="font/woff2" href="/fonts/setofont/setofont.woff2" crossorigin><!-- FontIcon (fi) --><link rel="stylesheet" href="https://cdn.fonticon.dev/fi.css"><!-- Font Awesome --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer"><!-- Canonical URL --><link rel="canonical" href="https://syrup2718.github.io/about/"><!-- Primary Meta Tags --><title>關於我</title><meta name="description" content="關於這個小窩的介紹"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="http://localhost:4321/about/"><meta property="og:title" content="關於我"><meta property="og:description" content="關於這個小窩的介紹"><meta property="og:image" content="http://localhost:4321/@fs/D:/Programming/GitHub/syrup2718.github.io/src/assets/blog-placeholder-1.jpg?origWidth=960&amp;origHeight=480&amp;origFormat=jpg"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><style data-vite-dev-id="D:/Programming/GitHub/syrup2718.github.io/src/styles/global.css">@font-face {
+  font-family: 'Setofont Variable';
+  src: url('/fonts/setofont/setofont.woff2') format('woff2'),
+       url('/fonts/setofont/setofont.woff') format('woff');
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg: #fdfbf7;
+  --fg: #2d2a26;
+  --muted: #8a847c;
+  --muted-light: #c9c3ba;
+  --border: #efe8e0;
+  --accent: #d4a5a5;
+  --accent-hover: #c99393;
+  --accent-light: #f5e6e6;
+  --card: #ffffff;
+  --font-seto: 'Setofont Variable', system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-seto);
+  font-size: 20px;
+  line-height: 1.8;
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 0.75rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--fg);
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: clamp(2rem, 5vw, 2.75rem); }
+h2 { font-size: clamp(1.5rem, 3.5vw, 2rem); }
+h3 { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
+h4 { font-size: 1.125rem; }
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--accent-hover);
+}
+
+p {
+  margin: 0 0 1.5rem;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+  font-size: 0.9em;
+  padding: 0.125em 0.375em;
+  background: var(--accent-light);
+  border-radius: 3px;
+}
+
+pre {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  background: #faf8f5;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+pre code {
+  padding: 0;
+  background: none;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+blockquote {
+  margin: 1.5rem 0;
+  padding: 0.75rem 0 0.75rem 1.25rem;
+  border-left: 3px solid var(--accent);
+  color: var(--muted);
+  font-size: 1.0625rem;
+  font-style: italic;
+  background: var(--accent-light);
+  border-radius: 0 8px 8px 0;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+ul, ol {
+  padding-left: 1.5rem;
+  margin: 0 0 1.5rem;
+}
+
+li {
+  margin: 0.5rem 0;
+}
+
+li::marker {
+  color: var(--accent);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9375rem;
+}
+
+th, td {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+th {
+  background: var(--accent-light);
+  font-weight: 500;
+}
+
+::selection {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+@media (max-width: 640px) {
+  body {
+    font-size: 18px;
+  }
+  main {
+    padding: 2rem 1rem;
+  }
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.5rem; }
+  blockquote {
+    padding: 0.75rem 0 0.75rem 1rem;
+    font-size: 1rem;
+  }
+}</style><style data-vite-dev-id="D:/Programming/GitHub/syrup2718.github.io/src/components/Footer.astro?astro&amp;type=style&amp;index=0&amp;lang.css">footer[data-astro-cid-jo6i4kqk] {
+  padding: 2.5rem 1.5rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--muted);
+  font-size: .875rem;
+  background: var(--bg);
+}
+
+.uptime[data-astro-cid-jo6i4kqk] {
+  margin-top: .75rem;
+  font-size: .8125rem;
+  color: var(--accent);
+}
+
+.uptime[data-astro-cid-jo6i4kqk] span[data-astro-cid-jo6i4kqk] {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (width <= 640px) {
+  footer[data-astro-cid-jo6i4kqk] {
+    padding: 2rem 1rem;
+    font-size: .8125rem;
+  }
+
+  .uptime[data-astro-cid-jo6i4kqk] {
+    font-size: .75rem;
+  }
+}
+</style><style data-vite-dev-id="D:/Programming/GitHub/syrup2718.github.io/src/components/HeaderLink.astro?astro&amp;type=style&amp;index=0&amp;lang.css">a[data-astro-cid-evkijfd6] {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  text-decoration: none;
+}
+
+i[data-astro-cid-evkijfd6] {
+  font-size: 1.125em;
+  line-height: 1;
+  flex-shrink: 0;
+}
+</style><style data-vite-dev-id="D:/Programming/GitHub/syrup2718.github.io/src/components/Header.astro?astro&amp;type=style&amp;index=0&amp;lang.css">header[data-astro-cid-nen7h5rs] {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+nav[data-astro-cid-nen7h5rs] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.site-title[data-astro-cid-nen7h5rs] {
+  display: flex;
+  align-items: center;
+  gap: .625rem;
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: var(--fg);
+  text-decoration: none;
+  letter-spacing: -.02em;
+}
+
+.site-logo[data-astro-cid-nen7h5rs] {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.site-title[data-astro-cid-nen7h5rs]:hover {
+  color: var(--accent);
+}
+
+.nav-links[data-astro-cid-nen7h5rs] {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs] {
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color .2s;
+}
+
+.nav-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]:hover, .nav-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs].active {
+  color: var(--fg);
+  font-weight: 500;
+}
+
+@media (width <= 640px) {
+  header[data-astro-cid-nen7h5rs] {
+    padding: 1rem;
+  }
+
+  .nav-links[data-astro-cid-nen7h5rs] {
+    gap: 1.25rem;
+  }
+
+  .nav-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs] {
+    font-size: .875rem;
+  }
+}
+</style><style data-vite-dev-id="D:/Programming/GitHub/syrup2718.github.io/src/components/Timeline.astro?astro&amp;type=style&amp;index=0&amp;lang.css">.timeline[data-astro-cid-3xih677i] {
+  position: relative;
+  padding-left: 2rem;
+  max-width: 800px;
+}
+
+.timeline[data-astro-cid-3xih677i]:before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+  border-radius: 1px;
+}
+
+.timeline-item[data-astro-cid-3xih677i] {
+  position: relative;
+  padding-bottom: 2.5rem;
+}
+
+.timeline-item[data-astro-cid-3xih677i]:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-marker[data-astro-cid-3xih677i] {
+  position: absolute;
+  left: -1.875rem;
+  top: .125rem;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--bg);
+  box-shadow: 0 0 0 2px var(--accent);
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.timeline-content[data-astro-cid-3xih677i] {
+  padding-left: 1rem;
+}
+
+.timeline-date[data-astro-cid-3xih677i] {
+  display: inline-block;
+  font-size: .8125rem;
+  font-weight: 500;
+  color: var(--accent);
+  margin-bottom: .25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.timeline-title[data-astro-cid-3xih677i] {
+  margin: 0 0 .25rem;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--fg);
+  line-height: 1.4;
+}
+
+.timeline-description[data-astro-cid-3xih677i] {
+  margin: 0;
+  font-size: .9375rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.timeline[data-astro-cid-3xih677i][data-align="alternate"] .timeline-item[data-astro-cid-3xih677i]:nth-child(2n) {
+  padding-left: 50%;
+}
+
+.timeline[data-astro-cid-3xih677i][data-align="alternate"] .timeline-item[data-astro-cid-3xih677i]:nth-child(2n) .timeline-marker[data-astro-cid-3xih677i] {
+  left: calc(50% - 7px);
+}
+
+.timeline[data-astro-cid-3xih677i][data-align="alternate"] .timeline-item[data-astro-cid-3xih677i]:nth-child(2n):before {
+  content: "";
+  position: absolute;
+  left: calc(50% - 1px);
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+
+.timeline[data-astro-cid-3xih677i][data-align="center"] .timeline-item[data-astro-cid-3xih677i] {
+  display: flex;
+  align-items: flex-start;
+}
+
+.timeline[data-astro-cid-3xih677i][data-align="center"] .timeline-marker[data-astro-cid-3xih677i] {
+  left: calc(50% - 7px);
+}
+
+.timeline[data-astro-cid-3xih677i][data-align="center"] .timeline-content[data-astro-cid-3xih677i] {
+  width: calc(50% - 2rem);
+  padding-left: 0;
+}
+
+.timeline[data-astro-cid-3xih677i][data-align="center"] .timeline-item[data-astro-cid-3xih677i]:nth-child(2n) .timeline-content[data-astro-cid-3xih677i] {
+  margin-left: auto;
+  padding-left: 0;
+  padding-right: 2rem;
+  text-align: right;
+}
+
+.timeline[data-astro-cid-3xih677i][data-align="center"] .timeline-item[data-astro-cid-3xih677i]:nth-child(2n) .timeline-marker[data-astro-cid-3xih677i] {
+  left: calc(50% - 7px);
+}
+
+@media (width <= 640px) {
+  .timeline[data-astro-cid-3xih677i] {
+    padding-left: 1.5rem;
+  }
+
+  .timeline[data-astro-cid-3xih677i]:before {
+    left: 5px;
+  }
+
+  .timeline-marker[data-astro-cid-3xih677i] {
+    left: -1.625rem;
+    width: 12px;
+    height: 12px;
+  }
+
+  .timeline[data-astro-cid-3xih677i][data-align="alternate"] .timeline-item[data-astro-cid-3xih677i]:nth-child(2n), .timeline[data-astro-cid-3xih677i][data-align="center"] .timeline-item[data-astro-cid-3xih677i]:nth-child(2n) {
+    padding-left: 0;
+    text-align: left;
+  }
+
+  .timeline[data-astro-cid-3xih677i][data-align="alternate"] .timeline-item[data-astro-cid-3xih677i]:nth-child(2n) .timeline-marker[data-astro-cid-3xih677i], .timeline[data-astro-cid-3xih677i][data-align="center"] .timeline-item[data-astro-cid-3xih677i]:nth-child(2n) .timeline-marker[data-astro-cid-3xih677i] {
+    left: -1.625rem;
+  }
+
+  .timeline[data-astro-cid-3xih677i][data-align="center"] .timeline-item[data-astro-cid-3xih677i] {
+    display: block;
+  }
+
+  .timeline[data-astro-cid-3xih677i][data-align="center"] .timeline-content[data-astro-cid-3xih677i] {
+    width: 100%;
+    padding-left: 1rem;
+    padding-right: 0;
+    text-align: left;
+  }
+
+  .timeline[data-astro-cid-3xih677i][data-align="alternate"] .timeline-item[data-astro-cid-3xih677i]:nth-child(2n):before {
+    display: none;
+  }
+}
+</style><style data-vite-dev-id="D:/Programming/GitHub/syrup2718.github.io/src/pages/about.astro?astro&amp;type=style&amp;index=0&amp;lang.css">h2[data-astro-cid-ta2fbyqs] {
+  font-weight: 700;
+}
+</style><script type="module" src="/@vite/client"></script><script type="module" src="/@id/astro/runtime/client/dev-toolbar/entrypoint.js"></script><script>window.__astro_dev_toolbar__ = {"root":"D:\\Programming\\GitHub\\syrup2718.github.io\\","version":"7.1.3","debugInfo":"Astro                    v7.1.3\nNode                     v24.18.0\nSystem                   Windows (x64)\nPackage Manager          npm\nOutput                   static\nAdapter                  none\nIntegrations             @astrojs/mdx\n                         @astrojs/sitemap"}</script><script type="module" src="/src/styles/global.css"></script><script type="module" src="/src/components/Footer.astro?astro&type=style&index=0&lang.css"></script><script type="module" src="/src/components/HeaderLink.astro?astro&type=style&index=0&lang.css"></script><script type="module" src="/src/components/Header.astro?astro&type=style&index=0&lang.css"></script><script type="module" src="/src/components/Timeline.astro?astro&type=style&index=0&lang.css"></script><script type="module" src="/src/pages/about.astro?astro&type=style&index=0&lang.css"></script></head><body><header data-astro-cid-nen7h5rs><nav data-astro-cid-nen7h5rs><a href="/" class="site-title" data-astro-cid-nen7h5rs><img src="/favicon.ico" alt="" class="site-logo" width="24" height="24" data-astro-cid-nen7h5rs>糖漿の小窩</a><div class="nav-links" data-astro-cid-nen7h5rs><a href="/" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6><i class="fa-solid fa-house" aria-hidden="true" data-astro-cid-evkijfd6></i>首頁</a><a href="/blog" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6><i class="fa-regular fa-file-lines" aria-hidden="true" data-astro-cid-evkijfd6></i>筆記</a><a href="/projects" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6><i class="fa-solid fa-briefcase" aria-hidden="true" data-astro-cid-evkijfd6></i>專案</a><a href="/about" class="active" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6><i class="fa-regular fa-user" aria-hidden="true" data-astro-cid-evkijfd6></i>關於</a></div></nav></header><main><article><header style="margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border);"><time style="display: block; font-size: 0.875rem; color: var(--muted); margin-bottom: 0.75rem;">2024年1月1日</time><h1 style="margin: 0; font-size: clamp(2rem, 4.5vw, 2.75rem); font-weight: 500; line-height: 1.25; letter-spacing: -0.02em;">關於我</h1></header><div style="font-size: 1.0625rem; line-height: 1.85;"><div style="text-align: center; margin-bottom: 2.5rem;" data-astro-cid-ta2fbyqs><img src="/@fs/D:/Programming/GitHub/syrup2718.github.io/src/assets/avatar.jpg?origWidth=512&amp;origHeight=512&amp;origFormat=jpg" alt="頭像" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);" data-astro-cid-ta2fbyqs><h2 style="margin: 1rem 0 0.5rem; font-size: 1.5rem; font-weight: 500;" data-astro-cid-ta2fbyqs>糖漿Syrup</h2><p style="margin: 0; color: var(--muted); font-size: 0.9375rem;" data-astro-cid-ta2fbyqs>一隻野生的糖漿，喜歡寫代碼、看書、玩遊戲。</p></div><h2 data-astro-cid-ta2fbyqs>自我介紹</h2><p data-astro-cid-ta2fbyqs>嗨嗨你們好吖，我是糖漿，目前就讀於臺北科技大學，現在已經是個19歲的老人家惹QWQ。這裡是我在網路世界搭建的小窩，主要會記錄一些生活碎片、技術筆記、個人專題，還有偶爾突然冒出來的心得感想。雖然內容可能有點雜亂，但也算是我一路學習與成長留下來的足跡，歡迎你們來探險探險～</p><p data-astro-cid-ta2fbyqs>我的興趣範圍非常廣，人工智慧、機器人、資訊安全，這些都是我有興趣ㄉ。平常喜歡研究一些新技術，也很享受把腦袋裡天馬行空的想法，一點一點做成真正可以運作的東西。雖然製作過程中經常遇到各種 Bug，有時候修好一個問題，又會蹦出三個新的問題，但看到作品成功動起來的那一刻，還是會覺得超級有成就感！</p><p data-astro-cid-ta2fbyqs>除了研究技術之外，我平常也喜歡看小說、聽音樂、玩玩遊戲，偶爾發發呆或沉浸在自己的幻想世界裡。對我來說這些都是忙碌生活中的充電方式，也常常能從故事、音樂和遊戲裡獲得一些新的靈感。</p><p data-astro-cid-ta2fbyqs>我是一個對很多事情都充滿好奇心的人，只要看到有趣的東西，就會忍不住想去了解看看。也因為想做的事情實在太多了，所以經常同時挖了好幾個坑，然後再慢慢努力把它們填回去(◍ˊㅿˋ◍)。</p><p data-astro-cid-ta2fbyqs>至於未來的夢想，我希望有一天可以環遊世界，親眼看看不同國家的風景、文化與生活方式，認識更多有趣的人，也留下只屬於自己的故事。希望未來回頭看的時候，可以對自己說：「雖然一路上跌跌撞撞，但至少有努力去做真正想做的事情，沒有留下太多遺憾。」</p><p data-astro-cid-ta2fbyqs>總之，這裡就是一隻野生糖漿的生活與技術紀錄。如果你剛好也喜歡人工智慧、機器人、資訊安全，或只是路過這小小的窩，都很歡迎留下來看看。希望我的文章能帶給你一點幫助、一點靈感，或至少讓你看得開心～</p><h2 data-astro-cid-ta2fbyqs>個人經歷</h2><div class="timeline" data-align="left" data-astro-cid-3xih677i><div class="timeline-item" data-astro-cid-3xih677i><div class="timeline-marker" data-astro-cid-3xih677i></div><div class="timeline-content" data-astro-cid-3xih677i><time class="timeline-date" data-astro-cid-3xih677i>2026/07</time><h3 class="timeline-title" data-astro-cid-3xih677i>參與 2026 AIS3</h3></div></div><div class="timeline-item" data-astro-cid-3xih677i><div class="timeline-marker" data-astro-cid-3xih677i></div><div class="timeline-content" data-astro-cid-3xih677i><time class="timeline-date" data-astro-cid-3xih677i>2025/12</time><h3 class="timeline-title" data-astro-cid-3xih677i>參與 2025 北科新世代青年城市論壇</h3></div></div><div class="timeline-item" data-astro-cid-3xih677i><div class="timeline-marker" data-astro-cid-3xih677i></div><div class="timeline-content" data-astro-cid-3xih677i><time class="timeline-date" data-astro-cid-3xih677i>2025/07</time><h3 class="timeline-title" data-astro-cid-3xih677i>參與 2025 AIS3</h3></div></div><div class="timeline-item" data-astro-cid-3xih677i><div class="timeline-marker" data-astro-cid-3xih677i></div><div class="timeline-content" data-astro-cid-3xih677i><time class="timeline-date" data-astro-cid-3xih677i>2025/05</time><h3 class="timeline-title" data-astro-cid-3xih677i>參與 2025 AIS3 Club</h3></div></div><div class="timeline-item" data-astro-cid-3xih677i><div class="timeline-marker" data-astro-cid-3xih677i></div><div class="timeline-content" data-astro-cid-3xih677i><time class="timeline-date" data-astro-cid-3xih677i>2024/09</time><h3 class="timeline-title" data-astro-cid-3xih677i>擔任 班級代表</h3></div></div><div class="timeline-item" data-astro-cid-3xih677i><div class="timeline-marker" data-astro-cid-3xih677i></div><div class="timeline-content" data-astro-cid-3xih677i><time class="timeline-date" data-astro-cid-3xih677i>2024/09</time><h3 class="timeline-title" data-astro-cid-3xih677i>擔任 科上科學會會長</h3></div></div></div><h2 data-astro-cid-ta2fbyqs>競賽經歷</h2><p data-astro-cid-ta2fbyqs>使用 <a href="https://astro.build/" data-astro-cid-ta2fbyqs>Astro</a> 建構，部署於 GitHub Pages。字體採用 <a href="https://github.com/ButTaiwan/Setofont" data-astro-cid-ta2fbyqs>Setofont</a>，追求閱讀的舒適度。</p><h2 data-astro-cid-ta2fbyqs>證照證書</h2><p data-astro-cid-ta2fbyqs>氣壓丙級技術士 SOLIDWORKS CAD Design Professional (CSWP) IPAS 資安工程師 初級</p><h2 data-astro-cid-ta2fbyqs>技能工具</h2><p data-astro-cid-ta2fbyqs>Python</p><h2 data-astro-cid-ta2fbyqs>聯繫方式</h2><ul data-astro-cid-ta2fbyqs><li data-astro-cid-ta2fbyqs>GitHub: <a href="https://github.com/syrup2718" data-astro-cid-ta2fbyqs>syrup2718</a></li><li data-astro-cid-ta2fbyqs>Email: syrup2718@gmail.com</li></ul></div></article></main><footer data-start-date="2026-07-22T00:00:00+08:00" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>&copy; 2026 糖漿の小窩</p><p class="uptime" data-astro-cid-jo6i4kqk>已經陪伴你<span id="days" data-astro-cid-jo6i4kqk>0</span>天<span id="hours" data-astro-cid-jo6i4kqk>00</span>小時<span id="minutes" data-astro-cid-jo6i4kqk>00</span>分<span id="seconds" data-astro-cid-jo6i4kqk>00</span>秒啦！</p></footer><script type="module" src="/src/components/Footer.astro?astro&type=script&index=0&lang.ts"></script></body></html>

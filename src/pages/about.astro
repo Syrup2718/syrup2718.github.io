@@ -1,6 +1,21 @@
 ---
 import Layout from '../layouts/BlogPost.astro';
 import Avatar from '../assets/avatar.jpg';
+import Timeline from '../components/Timeline.astro';
+
+interface ExperienceItem {
+  date: string;
+  title: string;
+}
+
+const experienceItems: ExperienceItem[] = [
+  { date: '2026/07', title: '參與 2026 AIS3' },
+  { date: '2025/12', title: '參與 2025 北科新世代青年城市論壇' },
+  { date: '2025/07', title: '參與 2025 AIS3' },
+  { date: '2025/05', title: '參與 2025 AIS3 Club' },
+  { date: '2024/09', title: '擔任 班級代表' },
+  { date: '2024/09', title: '擔任 科學會會長' },
+];
 ---
 
 <Layout
@@ -35,20 +50,36 @@ import Avatar from '../assets/avatar.jpg';
     我是一個對很多事情都充滿好奇心的人，只要看到有趣的東西，就會忍不住想去了解看看。也因為想做的事情實在太多了，所以經常同時挖了好幾個坑，然後再慢慢努力把它們填回去(◍ˊㅿˋ◍)。
   </p>
   <p> 
-    至於未來的夢想，我希望有一天可以環遊世界，親眼看看不同國家的風景、文化與生活方式，認識更多有趣的人，也留下只屬於自己的故事。希望未來回頭看的時候，可以對自己說：「雖然一路上跌跌撞撞，但至少有努力去做真正想做的事情，沒有留下太多遺憾。」
+    至於未來的夢想，我希望有一天可以環遊世界，親眼看看不同國家的風景、文化與生活方式，認識更多有趣的人，也留下只屬於自己的故事。希望未來回頭看的時候，可以對自己說：「雖然一路上跌跌撞撞，但至少有努力去做真正想做的事情，沒有留下太多遺憾。
   </p>
   <p> 
     總之，這裡就是一隻野生糖漿的生活與技術紀錄。如果你剛好也喜歡人工智慧、機器人、資訊安全，或只是路過這小小的窩，都很歡迎留下來看看。希望我的文章能帶給你一點幫助、一點靈感，或至少讓你看得開心～
   </p>
-  <h2>關於這個小窩</h2>
-  <p>
-    歡迎來到糖漿の小窩。這裡記錄一些生活碎片、技術筆記，還有心得感想。
-  </p>
 
-  <h2>關於這個站點</h2>
-  <p>
-    使用 <a href="https://astro.build/">Astro</a> 建構，部署於 GitHub Pages。字體採用 <a href="https://github.com/ButTaiwan/Setofont">Setofont</a>，追求閱讀的舒適度。
-  </p>
+  <h2>個人經歷</h2>
+  <Timeline items={experienceItems} align="left" />
+
+  <h2>競賽經歷</h2>
+  <ul class="experience-list">
+    <li>2025 第二十九屆TDK盃全國大專校院創思設計與製作競賽 自動組入選獎</li>
+    <li>2025 友二屆 校園科技大賽 科技有瘋狂競賽 佳作</li>
+    <li>2024 第二十八屆TDK盃全國大專校院創思設計與製作競賽 遙控組入選獎</li>
+    <li>2023 第十屆海峽兩岸暨港澳大學生職業技能大賽「數位孿生應用開發」賽項 一等獎</li>
+  </ul>
+
+  <h2>證照證書</h2>
+  <ul class="experience-list">
+    <li>氣壓丙級技術士</li>
+    <li>SOLIDWORKS CAD Design Professional (CSWP)</li>
+    <li>IPAS 資安工程師 初級</li>
+  </ul>
+
+  <h2>技能工具</h2>
+  <ul class="experience-list">
+    <li>Python</li>
+    <li>LabVIEW</li>
+    <li>SolidWorks</li>
+  </ul>
 
   <h2>聯繫方式</h2>
   <ul>
@@ -61,5 +92,35 @@ import Avatar from '../assets/avatar.jpg';
 <style>
   h2 {
     font-weight: 700;
+  }
+
+  .experience-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 1.5rem;
+  }
+
+  .experience-list li {
+    position: relative;
+    padding-left: 1.25rem;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    color: var(--fg);
+    line-height: 1.6;
+  }
+
+  .experience-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .experience-list li:last-child {
+    margin-bottom: 0;
   }
 </style>
