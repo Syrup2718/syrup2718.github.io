@@ -1,17 +1,83 @@
 ---
-title: 'First post'
-description: 'Lorem ipsum dolor sit amet'
-pubDate: 'Jul 08 2022'
-heroImage: '../../assets/blog-placeholder-3.jpg'
-tags: ['astro', 'web-dev', 'tutorial']
+title: '頭香ε٩(๑> ₃ <)۶з'
+description: '開張公告！！！'
+pubDate: 'Jul 24 2026'
+heroImage: '../../assets/blog-placeholder-1.jpg'
+tags: ['心得', '紀錄', '日常']
 ---
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vitae ultricies leo integer malesuada nunc vel risus commodo viverra. Adipiscing enim eu turpis egestas pretium. Euismod elementum nisi quis eleifend quam adipiscing. In hac habitasse platea dictumst vestibulum. Sagittis purus sit amet volutpat. Netus et malesuada fames ac turpis egestas. Eget magna fermentum iaculis eu non diam phasellus vestibulum lorem. Varius sit amet mattis vulputate enim. Habitasse platea dictumst quisque sagittis. Integer quis auctor elit sed vulputate mi. Dictumst quisque sagittis purus sit amet.
+嘟嘟嚕~
 
-Morbi tristique senectus et netus. Id semper risus in hendrerit gravida rutrum quisque non tellus. Habitasse platea dictumst quisque sagittis purus sit amet. Tellus molestie nunc non blandit massa. Cursus vitae congue mauris rhoncus. Accumsan tortor posuere ac ut. Fringilla urna porttitor rhoncus dolor. Elit ullamcorper dignissim cras tincidunt lobortis. In cursus turpis massa tincidunt dui ut ornare lectus. Integer feugiat scelerisque varius morbi enim nunc. Bibendum neque egestas congue quisque egestas diam. Cras ornare arcu dui vivamus arcu felis bibendum. Dignissim suspendisse in est ante in nibh mauris. Sed tempus urna et pharetra pharetra massa massa ultricies mi.
+開張啦!!!
 
-Mollis nunc sed id semper risus in. Convallis a cras semper auctor neque. Diam sit amet nisl suscipit. Lacus viverra vitae congue eu consequat ac felis donec. Egestas integer eget aliquet nibh praesent tristique magna sit amet. Eget magna fermentum iaculis eu non diam. In vitae turpis massa sed elementum. Tristique et egestas quis ipsum suspendisse ultrices. Eget lorem dolor sed viverra ipsum. Vel turpis nunc eget lorem dolor sed viverra. Posuere ac ut consequat semper viverra nam. Laoreet suspendisse interdum consectetur libero id faucibus. Diam phasellus vestibulum lorem sed risus ultricies tristique. Rhoncus dolor purus non enim praesent elementum facilisis. Ultrices tincidunt arcu non sodales neque. Tempus egestas sed sed risus pretium quam vulputate. Viverra suspendisse potenti nullam ac tortor vitae purus faucibus ornare. Fringilla urna porttitor rhoncus dolor purus non. Amet dictum sit amet justo donec enim.
+第一篇我也不知道要寫些什麼
 
-Mattis ullamcorper velit sed ullamcorper morbi tincidunt. Tortor posuere ac ut consequat semper viverra. Tellus mauris a diam maecenas sed enim ut sem viverra. Venenatis urna cursus eget nunc scelerisque viverra mauris in. Arcu ac tortor dignissim convallis aenean et tortor at. Curabitur gravida arcu ac tortor dignissim convallis aenean et tortor. Egestas tellus rutrum tellus pellentesque eu. Fusce ut placerat orci nulla pellentesque dignissim enim sit amet. Ut enim blandit volutpat maecenas volutpat blandit aliquam etiam. Id donec ultrices tincidunt arcu. Id cursus metus aliquam eleifend mi.
+就來跟你們分享分享 **糖漿** 這個名字是怎麼來的吧
 
-Tempus quam pellentesque nec nam aliquam sem. Risus at ultrices mi tempus imperdiet. Id porta nibh venenatis cras sed felis eget velit. Ipsum a arcu cursus vitae. Facilisis magna etiam tempor orci eu lobortis elementum. Tincidunt dui ut ornare lectus sit. Quisque non tellus orci ac. Blandit libero volutpat sed cras. Nec tincidunt praesent semper feugiat nibh sed pulvinar proin gravida. Egestas integer eget aliquet nibh praesent tristique magna.
+這個名字是我在升高一暑假的時候取的
+
+那時候就覺得以前用的名字 感覺不太好 想換一個了
+
+剛好那時又有在玩 Minecraft 
+
+所以就想說要順便取一個
+
+能夠和我 Minecraft ID 有連結的名字
+
+但是因為我也不太擅長想名字
+
+於是就打算從 英文往回推中文
+
+當時不知道為什麼 
+
+覺得5個字的英文單字好好看 
+
+(可能是我原本的 ID 是 5 個字的英文開頭?)
+
+所以就坐在桌子前面想了一整個下午 
+
+**結果還是什麼都沒想到**
+
+後來突然想到 **楓葉** 的英文好像是 Maple 
+
+接著又想到 **楓糖** 所以應該是 Maple Sugar 吧...?
+
+但仔細想想 就發現 **楓糖** 這名字 好像有點菜市場名 
+
+還是沒什麼想法那就先把這名字丟進翻譯看看唄
+
+結果得到了 **Maple Syrup**
+
+哦新單字!? **Syrup** 是什麼意思啊? 
+
+查了一下才發現 
+
+哦~ 原來是 **糖漿**
+
+嗯? **糖漿?** 這名字好像也不錯欸?
+
+英文也剛好是 5 個字母
+
+查了一下 好像也沒有人取過欸
+
+那就決定是他了吧!
+
+後來又覺得 如果單純只有英文 
+
+好像有點太單調了
+
+感覺要加點數字
+
+可是我生日放上去
+
+感覺又有點單調
+
+就是這時 突然想到 之前新學會的東西
+
+那就是 **e (Exponential)** !!
+
+那想必大家也知道 e=2.71828...
+
+於是兩者結合 就得到了 **Syrup2718** ヽ( ° ▽°)ノ
+
+這就是我的名字的由來啦~

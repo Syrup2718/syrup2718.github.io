@@ -4,7 +4,7 @@
 
 ## ✨ 特色
 
-- **極簡 + 少女風** 設計：暖米白背景、粉灰玫瑰強調色、Setofont Variable 字體
+- **極簡風** 設計：暖米白背景、粉灰玫瑰強調色、Setofont Variable 字體
 - **靜態生成**：零 JS、極速載入、100/100 Lighthouse
 - **內容集合**：筆記、專案分離管理，支援 MDX
 - **自動優化**：圖片優化、Sitemap、RSS Feed、Open Graph
