@@ -8,6 +8,12 @@ interface ExperienceItem {
   title: string;
 }
 
+interface ContactItem {
+  name: string;
+  icon: string;
+  url: string;
+}
+
 const experienceItems: ExperienceItem[] = [
   { date: '2026/07', title: '參與 2026 AIS3' },
   { date: '2025/12', title: '參與 2025 北科新世代青年城市論壇' },
@@ -15,6 +21,14 @@ const experienceItems: ExperienceItem[] = [
   { date: '2025/05', title: '參與 2025 AIS3 Club' },
   { date: '2024/09', title: '擔任 班級代表' },
   { date: '2024/09', title: '擔任 科學會會長' },
+];
+
+const contactItems: ContactItem[] = [
+  { name: 'GitHub', icon: 'fa-brands fa-github', url: 'https://github.com/syrup2718' },
+  { name: 'Email', icon: 'fa-solid fa-envelope', url: 'mailto:syrup2718@gmail.com' },
+  { name: 'Discord', icon: 'fa-brands fa-discord', url: 'https://discord.com/users/1006001748005093446' },
+  { name: 'Instagram', icon: 'fa-brands fa-instagram', url: 'https://instagram.com/syrupouo' },
+  { name: 'YouTube', icon: 'fa-brands fa-youtube', url: 'https://youtube.com/syrup2718' },
 ];
 ---
 
@@ -41,7 +55,7 @@ const experienceItems: ExperienceItem[] = [
     嗨嗨你們好吖，我是糖漿，目前就讀於臺北科技大學，現在已經是個19歲的老人家惹QWQ。這裡是我在網路世界搭建的小窩，主要會記錄一些生活碎片、技術筆記、個人專題，還有偶爾突然冒出來的心得感想。雖然內容可能有點雜亂，但也算是我一路學習與成長留下來的足跡，歡迎你們來探險探險～
   </p>
   <p>
-    我的興趣範圍非常廣，人工智慧、機器人、資訊安全，這些都是我有興趣ㄉ。平常喜歡研究一些新技術，也很享受把腦袋裡天馬行空的想法，一點一點做成真正可以運作的東西。雖然製作過程中經常遇到各種 Bug，有時候修好一個問題，又會蹦出三個新的問題，但看到作品成功動起來的那一刻，還是會覺得超級有成就感！
+    我的興趣範圍非常廣，人工智慧、機器人、資訊安全，這些都是我有興趣ㄉ。平常喜歡研究一些新技術，也很享受把腦袋裡天馬行空的想法，一點一點做成真正可以運作的東西。雖然製作過程中經常遇到各種 Bug，有時候修好一個問題，又會冒出三個新的問題，但看到作品成功動起來的那一刻，還是會覺得超級有成就感！
   </p>
   <p>
     除了研究技術之外，我平常也喜歡看小說、聽音樂、玩玩遊戲，偶爾發發呆或沉浸在自己的幻想世界裡。對我來說這些都是忙碌生活中的充電方式，也常常能從故事、音樂和遊戲裡獲得一些新的靈感。
@@ -82,10 +96,20 @@ const experienceItems: ExperienceItem[] = [
   </ul>
 
   <h2>聯繫方式</h2>
-  <ul>
-    <li>GitHub: <a href="https://github.com/syrup2718">syrup2718</a></li>
-    <li>Email: syrup2718@gmail.com</li>
-  </ul>
+  <div class="contact-links">
+    {contactItems.map((item) => (
+      <a
+        href={item.url}
+        class="contact-link"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={item.name}
+        title={item.name}
+      >
+        <i class={item.icon} aria-hidden="true" />
+      </a>
+    ))}
+  </div>
 </Layout>
 
 
@@ -123,4 +147,30 @@ const experienceItems: ExperienceItem[] = [
   .experience-list li:last-child {
     margin-bottom: 0;
   }
-</style>
+
+  .contact-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    align-items: center;
+  }
+
+  .contact-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.5rem;
+    color: var(--muted);
+    background: var(--accent-light);
+    border-radius: 50%;
+    text-decoration: none;
+    transition: color 0.2s ease, transform 0.2s ease;
+  }
+
+  .contact-link:hover {
+    color: var(--accent);
+    transform: translateY(-2px);
+  }
+</style>  
