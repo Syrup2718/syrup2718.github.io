@@ -1,0 +1,628 @@
+---
+import { getCollection } from 'astro:content';
+
+interface RawNode {
+  id: string;
+  type: 'tag' | 'blog' | 'project';
+  label: string;
+  url?: string;
+}
+interface RawEdge {
+  source: string;
+  target: string;
+}
+
+const posts = await getCollection('blog');
+const projects = await getCollection('projects');
+
+const tagContent = new Map<string, { label: string; items: { type: 'blog' | 'project'; id: string }[] }>();
+
+function collect(tags: string[] | undefined, id: string, type: 'blog' | 'project') {
+  if (!tags || tags.length === 0) return;
+  for (const raw of tags) {
+    const key = raw.trim().toLowerCase();
+    if (!key) continue;
+    let entry = tagContent.get(key);
+    if (!entry) {
+      entry = { label: raw.trim(), items: [] };
+      tagContent.set(key, entry);
+    }
+    entry.items.push({ type, id });
+  }
+}
+
+for (const p of posts) collect(p.data.tags, p.id, 'blog');
+for (const p of projects) collect(p.data.tags, p.id, 'project');
+
+const rawNodes: RawNode[] = [];
+const rawEdges: RawEdge[] = [];
+
+for (const [key, entry] of tagContent) {
+  rawNodes.push({ id: `tag:${key}`, type: 'tag', label: entry.label });
+  for (const item of entry.items) {
+    rawEdges.push({ source: `tag:${key}`, target: `${item.type}:${item.id}` });
+  }
+}
+
+const seen = new Set<string>();
+for (const p of posts) {
+  if (!p.data.tags || p.data.tags.length === 0) continue;
+  const id = `blog:${p.id}`;
+  if (seen.has(id)) continue;
+  seen.add(id);
+  rawNodes.push({ id, type: 'blog', label: p.data.title, url: `/blog/${p.id}/` });
+}
+for (const p of projects) {
+  if (!p.data.tags || p.data.tags.length === 0) continue;
+  const id = `project:${p.id}`;
+  if (seen.has(id)) continue;
+  seen.add(id);
+  rawNodes.push({ id, type: 'project', label: p.data.title, url: `/projects/${p.id}/` });
+}
+
+const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
+---
+
+<div class="tag-graph" id="tag-graph" data-graph={dataJson}>
+  <svg viewBox="0 0 900 560" role="img" aria-label="標籤關聯圖：標籤、文章與專案的關聯網路">
+    <rect class="graph-bg" width="900" height="560" rx="12" />
+    <g class="graph-transform">
+      <g class="graph-edges"></g>
+      <g class="graph-nodes"></g>
+    </g>
+  </svg>
+
+  <ul class="tag-graph-legend">
+    <li><span class="lg-tag" />標籤</li>
+    <li><span class="lg-blog" />筆記文章</li>
+    <li><span class="lg-project" />專案</li>
+  </ul>
+  <p class="tag-graph-hint">可拖曳節點、拖曳空白處平移、滾輪縮放；點擊標籤聚焦關聯，點擊文章或專案前往該頁面</p>
+</div>
+
+<script>
+  const graph = document.getElementById('tag-graph');
+  if (graph) {
+    const SVG_NS = 'http://www.w3.org/2000/svg';
+    const W = 900;
+    const H = 560;
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const raw = JSON.parse(graph.getAttribute('data-graph') ?? '{"nodes":[],"edges":[]}');
+
+    const nodes = raw.nodes.map((n, i) => {
+      const angle = (2 * Math.PI * i) / Math.max(1, raw.nodes.length) - Math.PI / 2;
+      const r = n.type === 'tag' ? 250 : 140;
+      return {
+        ...n,
+        x: W / 2 + r * Math.cos(angle),
+        y: H / 2 + r * Math.sin(angle),
+        vx: 0,
+        vy: 0,
+        ax: 0,
+        ay: 0,
+        fx: null as number | null,
+        fy: null as number | null,
+        degree: 0,
+        r: 5,
+        el: null as SVGElement | null,
+      };
+    });
+    const nodeById = new Map(nodes.map((n) => [n.id, n]));
+    const edges = raw.edges.map((e) => ({ source: nodeById.get(e.source), target: nodeById.get(e.target), el: null as SVGElement | null })).filter((e) => e.source && e.target);
+
+    nodes.forEach((n) => (n.degree = 0));
+    edges.forEach((e) => {
+      e.source!.degree++;
+      e.target!.degree++;
+    });
+    nodes.forEach((n) => {
+      n.r = n.type === 'tag' ? Math.min(16, 6 + n.degree * 1.4) : Math.min(11, 4.5 + n.degree * 0.9);
+    });
+
+    const transformG = graph.querySelector('.graph-transform');
+    const edgesG = graph.querySelector('.graph-edges');
+    const nodesG = graph.querySelector('.graph-nodes');
+    const bg = graph.querySelector('.graph-bg');
+    const svg = graph.querySelector('svg');
+
+    edges.forEach((e) => {
+      const line = document.createElementNS(SVG_NS, 'line');
+      line.setAttribute('class', 'edge');
+      e.el = line;
+      edgesG?.appendChild(line);
+    });
+
+    nodes.forEach((n) => {
+      const g = document.createElementNS(SVG_NS, 'g');
+      let shape: SVGElement;
+      if (n.type === 'project') {
+        shape = document.createElementNS(SVG_NS, 'rect');
+        shape.setAttribute('x', String(-n.r));
+        shape.setAttribute('y', String(-n.r));
+        shape.setAttribute('width', String(n.r * 2));
+        shape.setAttribute('height', String(n.r * 2));
+        shape.setAttribute('rx', '2');
+      } else if (n.type === 'blog') {
+        shape = document.createElementNS(SVG_NS, 'path');
+        shape.setAttribute('d', `M0 ${-n.r} L${n.r} 0 L0 ${n.r} L${-n.r} 0 Z`);
+      } else {
+        shape = document.createElementNS(SVG_NS, 'circle');
+        shape.setAttribute('r', String(n.r));
+      }
+      g.appendChild(shape);
+      const text = document.createElementNS(SVG_NS, 'text');
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('y', String(n.r + 12));
+      text.textContent = n.label;
+      g.appendChild(text);
+      g.classList.add('node', `node-${n.type}`);
+      g.setAttribute('tabindex', '0');
+      g.setAttribute('aria-label', n.label);
+      n.el = g;
+      nodesG?.appendChild(g);
+
+      g.addEventListener('mousedown', (e) => startDrag(e, n));
+      g.addEventListener('click', () => onNodeClick(n));
+      g.addEventListener('mouseenter', () => hover(n));
+      g.addEventListener('mouseleave', clearHover);
+      g.addEventListener('focus', () => hover(n));
+      g.addEventListener('blur', clearHover);
+      g.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onNodeClick(n);
+        }
+      });
+    });
+
+    let tx = 0;
+    let ty = 0;
+    let k = 1;
+
+    function applyTransform() {
+      transformG?.setAttribute('transform', `translate(${tx} ${ty}) scale(${k})`);
+    }
+
+    function render() {
+      edges.forEach((e) => {
+        if (!e.el || !e.source || !e.target) return;
+        e.el.setAttribute('x1', String(e.source.x));
+        e.el.setAttribute('y1', String(e.source.y));
+        e.el.setAttribute('x2', String(e.target.x));
+        e.el.setAttribute('y2', String(e.target.y));
+      });
+      nodes.forEach((n) => {
+        n.el?.setAttribute('transform', `translate(${n.x} ${n.y})`);
+      });
+    }
+
+    const REPULSION = 3800;
+    const SPRING = 0.02;
+    const REST = 130;
+    const CENTER = 0.004;
+    const DAMPING = 0.8;
+
+    function step() {
+      nodes.forEach((n) => {
+        n.ax = 0;
+        n.ay = 0;
+      });
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const a = nodes[i];
+          const b = nodes[j];
+          let dx = a.x - b.x;
+          let dy = a.y - b.y;
+          let d2 = dx * dx + dy * dy;
+          if (d2 < 1) {
+            dx = Math.random() - 0.5;
+            dy = Math.random() - 0.5;
+            d2 = 1;
+          }
+          const d = Math.sqrt(d2);
+          const f = REPULSION / d2;
+          const fx = (dx / d) * f;
+          const fy = (dy / d) * f;
+          a.ax += fx;
+          a.ay += fy;
+          b.ax -= fx;
+          b.ay -= fy;
+        }
+      }
+      edges.forEach((e) => {
+        if (!e.source || !e.target) return;
+        const dx = e.target.x - e.source.x;
+        const dy = e.target.y - e.source.y;
+        const d = Math.max(1, Math.sqrt(dx * dx + dy * dy));
+        const f = (d - REST) * SPRING;
+        const fx = (dx / d) * f;
+        const fy = (dy / d) * f;
+        e.source.ax += fx;
+        e.source.ay += fy;
+        e.target.ax -= fx;
+        e.target.ay -= fy;
+      });
+      nodes.forEach((n) => {
+        if (n.fx != null && n.fy != null) {
+          n.x = n.fx;
+          n.y = n.fy;
+          n.vx = 0;
+          n.vy = 0;
+          return;
+        }
+        n.ax += (W / 2 - n.x) * CENTER;
+        n.ay += (H / 2 - n.y) * CENTER;
+        n.vx = (n.vx + n.ax) * DAMPING;
+        n.vy = (n.vy + n.ay) * DAMPING;
+        n.x += n.vx;
+        n.y += n.vy;
+        n.x = Math.max(40, Math.min(W - 40, n.x));
+        n.y = Math.max(40, Math.min(H - 40, n.y));
+      });
+    }
+
+    let running = false;
+    let raf = 0;
+
+    function startSimulation() {
+      if (running || prefersReduced) return;
+      running = true;
+      let idleFrames = 0;
+      function loop() {
+        step();
+        render();
+        let speed = 0;
+        nodes.forEach((n) => (speed += Math.abs(n.vx) + Math.abs(n.vy)));
+        idleFrames = speed < 0.08 ? idleFrames + 1 : 0;
+        if (idleFrames > 40) {
+          running = false;
+          return;
+        }
+        raf = requestAnimationFrame(loop);
+      }
+      raf = requestAnimationFrame(loop);
+    }
+
+    function settle() {
+      if (prefersReduced) {
+        for (let i = 0; i < 900; i++) step();
+        render();
+      } else {
+        startSimulation();
+      }
+    }
+
+    let drag: { node: (typeof nodes)[number]; startX: number; startY: number; nodeX: number; nodeY: number; moved: boolean } | null = null;
+    let suppressClick = false;
+
+    function startDrag(e: MouseEvent, n: (typeof nodes)[number]) {
+      e.preventDefault();
+      drag = { node: n, startX: e.clientX, startY: e.clientY, nodeX: n.x, nodeY: n.y, moved: false };
+      n.vx = 0;
+      n.vy = 0;
+      n.fx = n.x;
+      n.fy = n.y;
+      startSimulation();
+    }
+
+    let panning = false;
+    let panStartX = 0;
+    let panStartY = 0;
+    let panTX = 0;
+    let panTY = 0;
+
+    window.addEventListener('mousemove', (e) => {
+      if (drag) {
+        const rect = svg!.getBoundingClientRect();
+        const dx = e.clientX - drag.startX;
+        const dy = e.clientY - drag.startY;
+        if (!drag.moved && Math.hypot(dx, dy) > 3) drag.moved = true;
+        const nx = drag.nodeX + (dx * W) / rect.width;
+        const ny = drag.nodeY + (dy * H) / rect.height;
+        if (prefersReduced) {
+          drag.node.x = nx;
+          drag.node.y = ny;
+          render();
+        } else {
+          drag.node.fx = nx;
+          drag.node.fy = ny;
+          if (!running) startSimulation();
+        }
+      } else if (panning) {
+        const rect = svg!.getBoundingClientRect();
+        tx = panTX + ((e.clientX - panStartX) * W) / rect.width;
+        ty = panTY + ((e.clientY - panStartY) * H) / rect.height;
+        applyTransform();
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (drag) {
+        suppressClick = drag.moved;
+        if (drag.node) {
+          drag.node.fx = null;
+          drag.node.fy = null;
+        }
+        if (drag.moved) startSimulation();
+        drag = null;
+        window.setTimeout(() => (suppressClick = false), 0);
+      }
+      panning = false;
+      if (bg) bg.style.cursor = 'grab';
+    });
+
+    bg?.addEventListener('mousedown', (e) => {
+      panning = true;
+      panStartX = e.clientX;
+      panStartY = e.clientY;
+      panTX = tx;
+      panTY = ty;
+      bg.style.cursor = 'grabbing';
+      e.preventDefault();
+    });
+
+    svg?.addEventListener(
+      'wheel',
+      (e) => {
+        e.preventDefault();
+        const rect = svg.getBoundingClientRect();
+        const vx = ((e.clientX - rect.left) / rect.width) * W;
+        const vy = ((e.clientY - rect.top) / rect.height) * H;
+        const factor = e.deltaY < 0 ? 1.12 : 1 / 1.12;
+        const nk = Math.min(4, Math.max(0.4, k * factor));
+        tx = vx - ((vx - tx) / k) * nk;
+        ty = vy - ((vy - ty) / k) * nk;
+        k = nk;
+        applyTransform();
+      },
+      { passive: false },
+    );
+
+    bg?.addEventListener('dblclick', () => {
+      tx = 0;
+      ty = 0;
+      k = 1;
+      applyTransform();
+      setFocus(null);
+    });
+
+    function setCamera(cx: number, cy: number, ck: number, animate: boolean) {
+      const targetTX = W / 2 - ck * cx;
+      const targetTY = H / 2 - ck * cy;
+      if (animate && !prefersReduced) {
+        const st = { tx, ty, k, t: performance.now(), dur: 320 };
+        function tick(now: number) {
+          const p = Math.min(1, (now - st.t) / st.dur);
+          const e = 1 - Math.pow(1 - p, 3);
+          tx = st.tx + (targetTX - st.tx) * e;
+          ty = st.ty + (targetTY - st.ty) * e;
+          k = st.k + (ck - st.k) * e;
+          applyTransform();
+          if (p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      } else {
+        tx = targetTX;
+        ty = targetTY;
+        k = ck;
+        applyTransform();
+      }
+    }
+
+    let focusedId: string | null = null;
+
+    function setFocus(id: string | null) {
+      focusedId = id;
+      if (id) {
+        const n = nodeById.get(id);
+        if (n) setCamera(n.x, n.y, 1.7, true);
+      }
+      applyOpacity();
+    }
+
+    function applyOpacity() {
+      if (!focusedId) {
+        nodes.forEach((n) => n.el?.classList.remove('hl', 'dim'));
+        edges.forEach((e) => e.el?.classList.remove('hl', 'dim'));
+        return;
+      }
+      const f = nodeById.get(focusedId);
+      if (!f) return;
+      const active = new Set<string>([focusedId]);
+      edges.forEach((e) => {
+        if (e.source === f) active.add(e.target!.id);
+        if (e.target === f) active.add(e.source!.id);
+      });
+      nodes.forEach((n) => {
+        const on = active.has(n.id);
+        n.el?.classList.toggle('dim', !on);
+        n.el?.classList.toggle('hl', n.id === focusedId);
+      });
+      edges.forEach((e) => {
+        const on = e.source === f || e.target === f;
+        e.el?.classList.toggle('dim', !on);
+        e.el?.classList.toggle('hl', on);
+      });
+    }
+
+    function hover(n: (typeof nodes)[number]) {
+      if (focusedId) return;
+      const active = new Set<string>([n.id]);
+      edges.forEach((e) => {
+        if (e.source === n) active.add(e.target!.id);
+        if (e.target === n) active.add(e.source!.id);
+      });
+      nodes.forEach((x) => {
+        const on = active.has(x.id);
+        x.el?.classList.toggle('hl', on);
+        x.el?.classList.toggle('dim', !on);
+      });
+      edges.forEach((e) => {
+        const on = e.source === n || e.target === n;
+        e.el?.classList.toggle('hl', on);
+        e.el?.classList.toggle('dim', !on);
+      });
+    }
+
+    function clearHover() {
+      if (focusedId) return;
+      nodes.forEach((n) => n.el?.classList.remove('hl', 'dim'));
+      edges.forEach((e) => e.el?.classList.remove('hl', 'dim'));
+    }
+
+    function onNodeClick(n: (typeof nodes)[number]) {
+      if (suppressClick) return;
+      if (n.type === 'tag') {
+        setFocus(focusedId === n.id ? null : n.id);
+      } else if (n.url) {
+        window.location.href = n.url;
+      }
+    }
+
+    settle();
+    render();
+    applyTransform();
+  }
+</script>
+
+<style>
+  .tag-graph {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .tag-graph svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .graph-bg {
+    fill: var(--bg);
+    cursor: grab;
+  }
+
+  :global(.edge) {
+    stroke: var(--muted);
+    stroke-width: 1.5;
+    opacity: 0.85;
+    transition: stroke 0.15s ease, opacity 0.15s ease;
+  }
+
+  :global(.edge.hl) {
+    stroke: var(--accent);
+    stroke-width: 2;
+    opacity: 1;
+  }
+
+  :global(.edge.dim) {
+    opacity: 0.1;
+  }
+
+  :global(.node) {
+    cursor: pointer;
+    outline: none;
+    transition: opacity 0.15s ease;
+  }
+
+  :global(.node circle),
+  :global(.node path),
+  :global(.node rect) {
+    transition: opacity 0.15s ease;
+  }
+
+  :global(.node text) {
+    fill: var(--fg);
+    font-size: 12px;
+    opacity: 0.85;
+    pointer-events: none;
+    paint-order: stroke;
+    stroke: var(--bg);
+    stroke-width: 3px;
+    stroke-linejoin: round;
+  }
+
+  :global(.node.hl text) {
+    opacity: 1;
+    font-weight: 500;
+  }
+
+  :global(.node.dim) {
+    opacity: 0.05;
+  }
+
+  :global(.node-tag circle) {
+    fill: var(--accent);
+  }
+
+  :global(.node-blog path) {
+    fill: #a8c3d8;
+  }
+
+  :global(.node-project rect) {
+    fill: #b9cfae;
+  }
+
+  .tag-graph-legend {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.25rem;
+    margin: 1rem 0 0.25rem;
+    padding: 0;
+  }
+
+  .tag-graph-legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.875rem;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .tag-graph-legend span {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .lg-tag {
+    background: var(--accent);
+  }
+
+  .lg-blog {
+    background: #a8c3d8;
+    border-radius: 2px;
+    transform: rotate(45deg);
+  }
+
+  .lg-project {
+    background: #b9cfae;
+    border-radius: 3px !important;
+  }
+
+  .tag-graph-hint {
+    text-align: center;
+    font-size: 0.8125rem;
+    color: var(--muted-light);
+    margin: 0.25rem 0 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.node),
+    :global(.edge) {
+      transition: none;
+    }
+  }
+</style>

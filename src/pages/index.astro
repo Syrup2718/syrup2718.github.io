@@ -2,6 +2,7 @@
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import TagGraph from '../components/TagGraph.astro';
 import { getCollection } from 'astro:content';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
@@ -104,18 +105,11 @@ const allProjects = await getCollection('projects');
         </section>
       )}
 
-      <section style="text-align: center; padding: 2rem 0; border-top: 1px solid var(--border);">
-        <h2 style="font-size: 1.125rem; font-weight: 500; margin-bottom: 1rem; color: var(--fg);">
-          想看更多？
+      <section style="padding: 2rem 0 1rem; border-top: 1px solid var(--border);">
+        <h2 style="font-size: 1.25rem; font-weight: 500; text-align: center; margin-bottom: 1.5rem;">
+          標籤關聯圖
         </h2>
-        <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;">
-          <a href="/blog" style="padding: 0.75rem 1.5rem; background: var(--fg); color: var(--bg); border-radius: 6px; font-size: 0.9375rem; font-weight: 500; text-decoration: none; transition: opacity 0.2s ease;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
-            瀏覽所有筆記
-          </a>
-          <a href="/projects" style="padding: 0.75rem 1.5rem; background: var(--accent); color: #fff; border-radius: 6px; font-size: 0.9375rem; font-weight: 500; text-decoration: none; transition: opacity 0.2s ease;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
-            查看專案作品
-          </a>
-        </div>
+        <TagGraph />
       </section>
     </main>
     <Footer />
