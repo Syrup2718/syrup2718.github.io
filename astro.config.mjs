@@ -7,5 +7,10 @@ import { defineConfig } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://syrup2718.github.io',
-	integrations: [mdx(), sitemap()],
+	integrations: [
+		mdx(),
+		sitemap({
+			filter: (page) => !new URL(page).pathname.startsWith('/library/'),
+		}),
+	],
 });

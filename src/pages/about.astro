@@ -38,11 +38,22 @@ const contactItems: ContactItem[] = [
   pubDate={new Date('2024-01-01')}
 >
 <div style="text-align: center; margin-bottom: 2.5rem;">
-  <img
-    src={Avatar.src}
-    alt="頭像"
-    style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);"
-  />
+  <button
+    class="library-trigger"
+    type="button"
+    data-library-trigger
+    data-knocks="0"
+    aria-label="糖漿Syrup 的頭像"
+    title="嗯……？"
+  >
+    <img
+      class="library-avatar"
+      src={Avatar.src}
+      alt=""
+    />
+    <span class="secret-book" aria-hidden="true">📖</span>
+  </button>
+  <span class="sr-only" data-secret-message aria-live="polite"></span>
   <h2 style="margin: 1rem 0 0.5rem; font-size: 1.5rem; font-weight: 500;">
     糖漿Syrup
   </h2>
@@ -113,8 +124,124 @@ const contactItems: ContactItem[] = [
   </div>
 </Layout>
 
+<script>
+  const libraryTrigger = document.querySelector<HTMLButtonElement>('[data-library-trigger]');
+  const secretMessage = document.querySelector<HTMLElement>('[data-secret-message]');
+
+  if (libraryTrigger) {
+    let knocks = 0;
+    let resetTimer: number | undefined;
+
+    libraryTrigger.addEventListener('click', () => {
+      window.clearTimeout(resetTimer);
+      knocks += 1;
+      libraryTrigger.dataset.knocks = String(knocks);
+
+      if (knocks === 1 && secretMessage) {
+        secretMessage.textContent = '好像有什麼聲音……';
+      }
+
+      if (knocks === 2 && secretMessage) {
+        secretMessage.textContent = '再敲一下？';
+      }
+
+      if (knocks >= 3) {
+        libraryTrigger.classList.add('is-unlocked');
+        libraryTrigger.disabled = true;
+        if (secretMessage) secretMessage.textContent = '門開了。';
+        window.setTimeout(() => {
+          window.location.href = '/library/';
+        }, 360);
+        return;
+      }
+
+      resetTimer = window.setTimeout(() => {
+        knocks = 0;
+        libraryTrigger.dataset.knocks = '0';
+        if (secretMessage) secretMessage.textContent = '';
+      }, 1300);
+    });
+  }
+</script>
 
 <style>
+  .library-trigger {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    color: inherit;
+    background: transparent;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .library-trigger:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 5px;
+  }
+
+  .library-avatar {
+    display: block;
+    width: 120px;
+    height: 120px;
+    border: 3px solid var(--border);
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    user-select: none;
+    -webkit-user-drag: none;
+    transition: border-color 0.18s ease, transform 0.18s ease;
+  }
+
+  .library-trigger[data-knocks='1'] .library-avatar {
+    border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+    transform: scale(1.015);
+  }
+
+  .library-trigger[data-knocks='2'] .library-avatar,
+  .library-trigger.is-unlocked .library-avatar {
+    border-color: var(--accent);
+    transform: scale(1.03);
+  }
+
+  .secret-book {
+    position: absolute;
+    right: -0.15rem;
+    bottom: 0.15rem;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border: 2px solid var(--bg);
+    border-radius: 50%;
+    background: var(--accent-light);
+    font-size: 1rem;
+    opacity: 0;
+    transform: translateY(4px) scale(0.8);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+
+  .library-trigger[data-knocks='2'] .secret-book,
+  .library-trigger.is-unlocked .secret-book {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   h2 {
     font-weight: 700;
   }
@@ -174,4 +301,11 @@ const contactItems: ContactItem[] = [
     color: var(--accent);
     transform: translateY(-2px);
   }
-</style>  
+
+  @media (prefers-reduced-motion: reduce) {
+    .library-avatar,
+    .secret-book {
+      transition: none;
+    }
+  }
+</style>

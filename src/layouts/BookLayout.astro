@@ -1,0 +1,278 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+
+type Props = CollectionEntry<'library'>['data'];
+
+const {
+  title,
+  author,
+  description,
+  finishedDate,
+  rating,
+  tags,
+  cover,
+  spineColor,
+  favorite,
+  sample,
+} = Astro.props;
+const coverStyle = `--cover-color: ${spineColor};`;
+---
+
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <BaseHead title={`${title} | 秘密書房`} description={description} image={cover} />
+    <meta name="robots" content="noindex, nofollow" />
+  </head>
+  <body>
+    <Header />
+    <main class="book-main">
+      <a class="back-link" href="/library/">← 返回書架</a>
+
+      <article>
+        <header class="book-header">
+          <div class="cover-wrap">
+            {cover ? (
+              <Image class="book-cover" src={cover} alt={`${title} 封面`} width={360} height={540} />
+            ) : (
+              <div class="cover-placeholder" style={coverStyle} aria-hidden="true">
+                <span>{title}</span>
+                <small>{author}</small>
+              </div>
+            )}
+          </div>
+
+          <div class="book-info">
+            <div class="eyebrow">
+              {sample && <span class="sample-label">示範藏書</span>}
+              {favorite && <span>私心推薦</span>}
+            </div>
+            <h1>{title}</h1>
+            <p class="author">{author}</p>
+            <p class="description">{description}</p>
+
+            <dl>
+              <div>
+                <dt>讀完日期</dt>
+                <dd>{finishedDate.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })}</dd>
+              </div>
+              <div>
+                <dt>我的評分</dt>
+                <dd aria-label={`${rating} 顆星`}><span class="stars" aria-hidden="true">{'★'.repeat(Math.round(rating))}{'☆'.repeat(5 - Math.round(rating))}</span></dd>
+              </div>
+            </dl>
+
+            {tags.length > 0 && (
+              <ul class="book-tags" aria-label="書籍標籤">
+                {tags.map((tag) => <li>{tag}</li>)}
+              </ul>
+            )}
+          </div>
+        </header>
+
+        <section class="book-review" aria-label="閱讀心得">
+          <div class="review-heading">
+            <span aria-hidden="true">✦</span>
+            <h2>閱讀心得</h2>
+            <span aria-hidden="true">✦</span>
+          </div>
+          <slot />
+        </section>
+      </article>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .book-main {
+    max-width: 920px;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .book-header {
+    display: grid;
+    grid-template-columns: minmax(180px, 270px) 1fr;
+    gap: clamp(2rem, 6vw, 4.5rem);
+    align-items: center;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cover-wrap {
+    perspective: 900px;
+  }
+
+  .book-cover,
+  .cover-placeholder {
+    display: block;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    border-radius: 3px 8px 8px 3px;
+    box-shadow: -8px 10px 0 var(--border);
+    transform: rotateY(4deg);
+  }
+
+  .cover-placeholder {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem 1.5rem;
+    overflow: hidden;
+    border-left: 8px solid color-mix(in srgb, var(--cover-color) 76%, #3c2f2a);
+    color: #fffdf8;
+    background:
+      linear-gradient(135deg, rgba(255,255,255,0.12), transparent 45%),
+      var(--cover-color);
+    text-align: center;
+  }
+
+  .cover-placeholder::before,
+  .cover-placeholder::after {
+    content: '';
+    position: absolute;
+    left: 12%;
+    width: 76%;
+    height: 1px;
+    background: rgba(255,255,255,0.45);
+  }
+
+  .cover-placeholder::before { top: 12%; }
+  .cover-placeholder::after { bottom: 12%; }
+
+  .cover-placeholder span {
+    font-size: clamp(1.35rem, 4vw, 2rem);
+    line-height: 1.35;
+  }
+
+  .cover-placeholder small {
+    font-size: 0.8rem;
+    opacity: 0.78;
+  }
+
+  .eyebrow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    min-height: 1.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--accent);
+  }
+
+  .eyebrow span {
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    background: var(--accent-light);
+  }
+
+  .book-info h1 {
+    margin-bottom: 0.45rem;
+  }
+
+  .author {
+    margin-bottom: 1.25rem;
+    color: var(--muted);
+    font-size: 1rem;
+  }
+
+  .description {
+    margin-bottom: 1.5rem;
+    color: var(--fg);
+    font-size: 1rem;
+  }
+
+  dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 0 0 1.25rem;
+  }
+
+  dl div {
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+  }
+
+  dt {
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+
+  dd {
+    margin: 0.2rem 0 0;
+    font-size: 0.9rem;
+  }
+
+  .stars {
+    color: var(--accent);
+    letter-spacing: 0.12em;
+  }
+
+  .book-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .book-tags li {
+    margin: 0;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    color: var(--muted);
+    background: var(--border);
+    font-size: 0.75rem;
+  }
+
+  .book-review {
+    max-width: 720px;
+    margin: 3rem auto 0;
+    font-size: 1.05rem;
+  }
+
+  .review-heading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-bottom: 2rem;
+    color: var(--accent);
+  }
+
+  .review-heading h2 {
+    margin: 0;
+    font-size: 1.35rem;
+  }
+
+  @media (max-width: 640px) {
+    .book-header {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .cover-wrap {
+      width: min(66vw, 240px);
+      margin: 0 auto;
+    }
+
+    dl {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

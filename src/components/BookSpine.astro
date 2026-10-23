@@ -1,0 +1,139 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  book: CollectionEntry<'library'>;
+  index: number;
+}
+
+const { book, index } = Astro.props;
+const heights = [218, 236, 204, 228, 214, 242];
+const widths = [54, 62, 50, 58, 56, 64];
+const height = heights[index % heights.length];
+const width = widths[index % widths.length];
+const searchText = [book.data.title, book.data.author, ...book.data.tags]
+  .join(' ')
+  .normalize('NFKC')
+  .toLocaleLowerCase('zh-TW');
+const style = `--spine-color: ${book.data.spineColor}; --book-height: ${height}px; --book-width: ${width}px;`;
+---
+
+<li class="book-slot" data-book data-search={searchText}>
+  <a
+    class:list={{ 'book-spine': true, favorite: book.data.favorite }}
+    href={`/library/${book.id}/`}
+    style={style}
+    aria-label={`${book.data.title}，作者 ${book.data.author}，閱讀心得`}
+  >
+    <span class="spine-band top" aria-hidden="true"></span>
+    <span class="book-title">{book.data.title}</span>
+    <span class="book-author">{book.data.author}</span>
+    {book.data.sample && <span class="sample-dot" title="示範藏書" aria-hidden="true"></span>}
+    <span class="spine-band bottom" aria-hidden="true"></span>
+  </a>
+</li>
+
+<style>
+  .book-slot {
+    display: flex;
+    align-items: flex-end;
+    margin: 0;
+  }
+
+  .book-spine {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: var(--book-width);
+    height: var(--book-height);
+    padding: 1.35rem 0.45rem 1.05rem;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--spine-color) 78%, #3f3029);
+    border-bottom: 0;
+    border-radius: 4px 4px 1px 1px;
+    color: #fffdf8;
+    background:
+      linear-gradient(90deg, rgba(255,255,255,0.14), transparent 22%, transparent 78%, rgba(0,0,0,0.13)),
+      var(--spine-color);
+    text-decoration: none;
+    box-shadow: inset -2px 0 0 rgba(0, 0, 0, 0.09);
+    transform-origin: bottom center;
+    transition: transform 0.16s ease, filter 0.16s ease;
+  }
+
+  .book-spine:hover,
+  .book-spine:focus-visible {
+    z-index: 2;
+    color: #fffdf8;
+    filter: saturate(1.08);
+    transform: translateY(-10px);
+  }
+
+  .book-spine:focus-visible {
+    outline: 3px solid var(--accent-light);
+    outline-offset: 3px;
+  }
+
+  .book-title {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: 0.06em;
+    writing-mode: vertical-rl;
+  }
+
+  .book-author {
+    max-height: 4.6rem;
+    overflow: hidden;
+    font-size: 0.62rem;
+    line-height: 1.2;
+    opacity: 0.8;
+    writing-mode: vertical-rl;
+  }
+
+  .spine-band {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: rgba(255, 249, 232, 0.55);
+  }
+
+  .spine-band.top {
+    top: 0.7rem;
+  }
+
+  .spine-band.bottom {
+    bottom: 0.65rem;
+  }
+
+  .sample-dot {
+    position: absolute;
+    top: 1rem;
+    right: 0.35rem;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #fff4bd;
+  }
+
+  .favorite::after {
+    content: '★';
+    position: absolute;
+    left: 50%;
+    bottom: 0.9rem;
+    font-size: 0.55rem;
+    color: #fff4bd;
+    transform: translateX(-50%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .book-spine {
+      transition: none;
+    }
+  }
+</style>
