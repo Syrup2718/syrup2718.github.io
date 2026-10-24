@@ -58,6 +58,7 @@
 | 指令 | 說明 |
 |------|------|
 | `npm install` | 安裝依賴 |
+| `npm run font:subset` | 依目前網站文字重新產生 Setofont 子集 |
 | `npx astro dev --background` | 背景啟動開發伺服器 (localhost:4321) |
 | `npx astro dev stop` | 停止背景伺服器 |
 | `npm run build` | 建構生產站點至 `./dist/` |
@@ -112,6 +113,19 @@ sample: false              # 正式藏書請維持 false
 ```
 
 圖書館不會出現在主導覽或 sitemap；在關於頁連點頭像三次即可進入。
+
+### 字型子集
+
+完整 Setofont 原始檔保存在 `src/assets/fonts/`，網站只會提供依目前內容產生的
+`public/fonts/setofont/setofont-subset.woff2`。執行 `npm run build` 時會先自動掃描
+`src/` 內的 `.astro`、`.md`、`.mdx`、`.ts`、`.js`、`.css`、`.json` 與 `.svg`，再更新字型子集。
+
+新增文章後若要立即在開發模式確認新字元，可先執行：
+
+```powershell
+npm run font:subset
+npx astro dev --background
+```
 
 ## 🎨 設計系統
 
