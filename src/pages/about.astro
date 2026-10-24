@@ -51,7 +51,10 @@ const contactItems: ContactItem[] = [
       src={Avatar.src}
       alt=""
     />
-    <span class="secret-book" aria-hidden="true">📖</span>
+    <span class="secret-rings" aria-hidden="true">
+      <span></span>
+      <span></span>
+    </span>
   </button>
   <span class="sr-only" data-secret-message aria-live="polite"></span>
   <h2 style="margin: 1rem 0 0.5rem; font-size: 1.5rem; font-weight: 500;">
@@ -169,6 +172,7 @@ const contactItems: ContactItem[] = [
     position: relative;
     display: inline-grid;
     place-items: center;
+    isolation: isolate;
     padding: 0;
     border: 0;
     border-radius: 50%;
@@ -184,6 +188,8 @@ const contactItems: ContactItem[] = [
   }
 
   .library-avatar {
+    position: relative;
+    z-index: 1;
     display: block;
     width: 120px;
     height: 120px;
@@ -193,7 +199,7 @@ const contactItems: ContactItem[] = [
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     user-select: none;
     -webkit-user-drag: none;
-    transition: border-color 0.18s ease, transform 0.18s ease;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
   }
 
   .library-trigger[data-knocks='1'] .library-avatar {
@@ -204,30 +210,54 @@ const contactItems: ContactItem[] = [
   .library-trigger[data-knocks='2'] .library-avatar,
   .library-trigger.is-unlocked .library-avatar {
     border-color: var(--accent);
-    transform: scale(1.03);
+    box-shadow:
+      0 0 0 6px var(--accent-light),
+      0 0 0 9px color-mix(in srgb, var(--accent) 55%, transparent),
+      0 4px 12px rgba(0, 0, 0, 0.05);
+    transform: scale(1.035);
   }
 
-  .secret-book {
+  .secret-rings {
     position: absolute;
-    right: -0.15rem;
-    bottom: 0.15rem;
-    display: grid;
-    place-items: center;
-    width: 2rem;
-    height: 2rem;
-    border: 2px solid var(--bg);
+    inset: 0;
+    z-index: 0;
     border-radius: 50%;
-    background: var(--accent-light);
-    font-size: 1rem;
-    opacity: 0;
-    transform: translateY(4px) scale(0.8);
-    transition: opacity 0.18s ease, transform 0.18s ease;
+    pointer-events: none;
   }
 
-  .library-trigger[data-knocks='2'] .secret-book,
-  .library-trigger.is-unlocked .secret-book {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+  .secret-rings span {
+    position: absolute;
+    inset: -4px;
+    border: 3px solid var(--accent);
+    border-radius: inherit;
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  .library-trigger[data-knocks='2'] .secret-rings span,
+  .library-trigger.is-unlocked .secret-rings span {
+    animation: secret-ring-pulse 0.8s cubic-bezier(0.2, 0.7, 0.25, 1) both;
+  }
+
+  .library-trigger[data-knocks='2'] .secret-rings span:last-child,
+  .library-trigger.is-unlocked .secret-rings span:last-child {
+    animation-delay: 0.13s;
+  }
+
+  @keyframes secret-ring-pulse {
+    0% {
+      opacity: 0.9;
+      transform: scale(0.9);
+    }
+
+    65% {
+      opacity: 0.38;
+    }
+
+    100% {
+      opacity: 0;
+      transform: scale(1.48);
+    }
   }
 
   .sr-only {
@@ -303,9 +333,21 @@ const contactItems: ContactItem[] = [
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .library-avatar,
-    .secret-book {
+    .library-avatar {
       transition: none;
+    }
+
+    .library-trigger[data-knocks='2'] .secret-rings span,
+    .library-trigger.is-unlocked .secret-rings span {
+      animation: none;
+      opacity: 0.6;
+      transform: scale(1.14);
+    }
+
+    .library-trigger[data-knocks='2'] .secret-rings span:last-child,
+    .library-trigger.is-unlocked .secret-rings span:last-child {
+      opacity: 0.3;
+      transform: scale(1.27);
     }
   }
 </style>
