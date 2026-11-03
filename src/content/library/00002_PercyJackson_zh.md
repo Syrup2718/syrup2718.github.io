@@ -1,5 +1,5 @@
 ---
-title: '波西傑克森：神火之盜'
+title: '波西傑克森'
 author: '雷克·萊爾頓'
 description: '眾神與凡人所生之子，希臘神話的奇幻...'
 finishedDate: '2019-09-02'

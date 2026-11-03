@@ -1,5 +1,5 @@
 ---
-title: '哈利波特：神秘的魔法石'
+title: '哈利波特'
 author: 'J.K. Rowling'
 description: '魔法世界的憧憬...'
 finishedDate: '2016-09-02'

@@ -1,5 +1,5 @@
 ---
-title: '混血營英雄：迷路英雄'
+title: '混血營英雄'
 author: '雷克·萊爾頓'
 description: '眾神與凡人所生之子，希臘神話的奇幻...'
 finishedDate: '2020-09-02'

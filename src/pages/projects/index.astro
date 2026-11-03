@@ -13,7 +13,7 @@ const projects = (await getCollection('projects')).sort(
 <!doctype html>
 <html lang="zh-TW">
   <head>
-    <BaseHead title="專案 | " + SITE_TITLE description={SITE_DESCRIPTION} />
+    <BaseHead title={`專案 | ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
   </head>
   <body>
     <Header />
