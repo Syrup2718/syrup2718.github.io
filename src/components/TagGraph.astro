@@ -60,11 +60,26 @@ for (const p of projects) {
   rawNodes.push({ id, type: 'project', label: p.data.title, url: `/projects/${p.id}/` });
 }
 
+const graphSummary = `${tagContent.size} 個標籤 · ${seen.size} 篇內容`;
 const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
 ---
 
-<div class="tag-graph" id="tag-graph" data-graph={dataJson}>
-  <svg viewBox="0 0 900 560" role="img" aria-label="標籤關聯圖：標籤、文章與專案的關聯網路">
+<div class="tag-graph" id="tag-graph" data-graph={dataJson} data-default-status={graphSummary}>
+  <div class="tag-graph-toolbar">
+    <p class="tag-graph-status" data-graph-status aria-live="polite">{graphSummary}</p>
+    <div class="tag-graph-controls" aria-label="關聯圖檢視控制">
+      <button type="button" data-graph-action="zoom-out" aria-label="縮小關聯圖">−</button>
+      <button type="button" class="reset-view" data-graph-action="reset">重設</button>
+      <button type="button" data-graph-action="zoom-in" aria-label="放大關聯圖">＋</button>
+    </div>
+  </div>
+
+  <svg
+    viewBox="0 0 900 560"
+    role="group"
+    aria-label="標籤關聯圖：標籤、文章與專案的關聯網路"
+    aria-describedby="tag-graph-hint"
+  >
     <rect class="graph-bg" width="900" height="560" rx="12" />
     <g class="graph-transform">
       <g class="graph-edges"></g>
@@ -77,26 +92,51 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
     <li><span class="lg-blog" />筆記文章</li>
     <li><span class="lg-project" />專案</li>
   </ul>
-  <p class="tag-graph-hint">可拖曳節點、拖曳空白處平移、滾輪縮放；點擊標籤聚焦關聯，點擊文章或專案前往該頁面</p>
+  <p class="tag-graph-hint" id="tag-graph-hint">拖曳節點調整位置，拖曳空白處移動畫面；點擊標籤查看關聯，點擊文章或專案前往內容</p>
 </div>
 
 <script>
   const graph = document.getElementById('tag-graph');
   if (graph) {
     const SVG_NS = 'http://www.w3.org/2000/svg';
-    const W = 900;
-    const H = 560;
+    const compact = graph.getBoundingClientRect().width < 560;
+    const W = compact ? 480 : 900;
+    const H = compact ? 640 : 560;
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const transformG = graph.querySelector('.graph-transform');
+    const edgesG = graph.querySelector('.graph-edges');
+    const nodesG = graph.querySelector('.graph-nodes');
+    const bg = graph.querySelector<SVGRectElement>('.graph-bg');
+    const svg = graph.querySelector<SVGSVGElement>('svg');
+    const status = graph.querySelector<HTMLElement>('[data-graph-status]');
+    const defaultStatus = graph.dataset.defaultStatus ?? '';
+
+    svg?.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    bg?.setAttribute('width', String(W));
+    bg?.setAttribute('height', String(H));
 
     const raw = JSON.parse(graph.getAttribute('data-graph') ?? '{"nodes":[],"edges":[]}');
+    const tagNodes = raw.nodes.filter((n) => n.type === 'tag');
+    const contentNodes = raw.nodes.filter((n) => n.type !== 'tag');
+    const tagOrder = new Map(tagNodes.map((n, index) => [n.id, index]));
+    const contentOrder = new Map(contentNodes.map((n, index) => [n.id, index]));
 
-    const nodes = raw.nodes.map((n, i) => {
-      const angle = (2 * Math.PI * i) / Math.max(1, raw.nodes.length) - Math.PI / 2;
-      const r = n.type === 'tag' ? 250 : 140;
+    const nodes = raw.nodes.map((n) => {
+      const isTag = n.type === 'tag';
+      const index = (isTag ? tagOrder : contentOrder).get(n.id) ?? 0;
+      const count = Math.max(1, isTag ? tagNodes.length : contentNodes.length);
+      const angle = (2 * Math.PI * index) / count - Math.PI / 2 + (isTag ? 0 : Math.PI / count);
+      const alternateRing = index % 2 === 1;
+      const radiusX = isTag
+        ? (compact ? 175 : 330)
+        : (compact ? (alternateRing ? 120 : 78) : (alternateRing ? 225 : 155));
+      const radiusY = isTag
+        ? (compact ? 255 : 210)
+        : (compact ? (alternateRing ? 180 : 118) : (alternateRing ? 135 : 92));
       return {
         ...n,
-        x: W / 2 + r * Math.cos(angle),
-        y: H / 2 + r * Math.sin(angle),
+        x: W / 2 + radiusX * Math.cos(angle),
+        y: H / 2 + radiusY * Math.sin(angle),
         vx: 0,
         vy: 0,
         ax: 0,
@@ -117,14 +157,11 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
       e.target!.degree++;
     });
     nodes.forEach((n) => {
-      n.r = n.type === 'tag' ? Math.min(16, 6 + n.degree * 1.4) : Math.min(11, 4.5 + n.degree * 0.9);
+      const compactBoost = compact ? 1.5 : 0;
+      n.r = n.type === 'tag'
+        ? Math.min(17, 6.5 + n.degree * 1.4 + compactBoost)
+        : Math.min(12, 5 + n.degree * 0.9 + compactBoost);
     });
-
-    const transformG = graph.querySelector('.graph-transform');
-    const edgesG = graph.querySelector('.graph-edges');
-    const nodesG = graph.querySelector('.graph-nodes');
-    const bg = graph.querySelector('.graph-bg');
-    const svg = graph.querySelector('svg');
 
     edges.forEach((e) => {
       const line = document.createElementNS(SVG_NS, 'line');
@@ -132,6 +169,10 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
       e.el = line;
       edgesG?.appendChild(line);
     });
+
+    function compactLabel(label: string, limit: number) {
+      return label.length > limit ? `${label.slice(0, limit - 1)}…` : label;
+    }
 
     nodes.forEach((n) => {
       const g = document.createElementNS(SVG_NS, 'g');
@@ -151,18 +192,28 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
         shape.setAttribute('r', String(n.r));
       }
       g.appendChild(shape);
+      const title = document.createElementNS(SVG_NS, 'title');
+      title.textContent = n.label;
+      g.appendChild(title);
       const text = document.createElementNS(SVG_NS, 'text');
       text.setAttribute('text-anchor', 'middle');
-      text.setAttribute('y', String(n.r + 12));
-      text.textContent = n.label;
+      text.setAttribute('y', String(n.r + (compact ? 15 : 13)));
+      text.textContent = compactLabel(n.label, n.type === 'tag' ? 15 : 18);
       g.appendChild(text);
       g.classList.add('node', `node-${n.type}`);
       g.setAttribute('tabindex', '0');
-      g.setAttribute('aria-label', n.label);
+      g.setAttribute('role', n.type === 'tag' ? 'button' : 'link');
+      g.setAttribute(
+        'aria-label',
+        n.type === 'tag'
+          ? `標籤 ${n.label}，${n.degree} 個關聯，按下聚焦`
+          : `${n.type === 'blog' ? '筆記' : '專案'} ${n.label}，按下開啟`,
+      );
+      if (n.type === 'tag') g.setAttribute('aria-pressed', 'false');
       n.el = g;
       nodesG?.appendChild(g);
 
-      g.addEventListener('mousedown', (e) => startDrag(e, n));
+      g.addEventListener('pointerdown', (e) => startDrag(e, n));
       g.addEventListener('click', () => onNodeClick(n));
       g.addEventListener('mouseenter', () => hover(n));
       g.addEventListener('mouseleave', clearHover);
@@ -197,11 +248,12 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
       });
     }
 
-    const REPULSION = 3800;
-    const SPRING = 0.02;
-    const REST = 130;
-    const CENTER = 0.004;
+    const REPULSION = compact ? 4300 : 4000;
+    const SPRING = compact ? 0.024 : 0.02;
+    const REST = compact ? 92 : 130;
+    const CENTER = compact ? 0.006 : 0.004;
     const DAMPING = 0.8;
+    const BOUNDARY = compact ? 42 : 54;
 
     function step() {
       nodes.forEach((n) => {
@@ -222,8 +274,16 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
           }
           const d = Math.sqrt(d2);
           const f = REPULSION / d2;
-          const fx = (dx / d) * f;
-          const fy = (dy / d) * f;
+          const bothContent = a.type !== 'tag' && b.type !== 'tag';
+          const mixedTypes = (a.type === 'tag') !== (b.type === 'tag');
+          const minimumDistance = bothContent
+            ? (compact ? 78 : 94)
+            : mixedTypes
+              ? (compact ? 54 : 66)
+              : a.r + b.r + (compact ? 22 : 16);
+          const collision = d < minimumDistance ? (minimumDistance - d) * 0.09 : 0;
+          const fx = (dx / d) * (f + collision);
+          const fy = (dy / d) * (f + collision);
           a.ax += fx;
           a.ay += fy;
           b.ax -= fx;
@@ -257,8 +317,8 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
         n.vy = (n.vy + n.ay) * DAMPING;
         n.x += n.vx;
         n.y += n.vy;
-        n.x = Math.max(40, Math.min(W - 40, n.x));
-        n.y = Math.max(40, Math.min(H - 40, n.y));
+        n.x = Math.max(BOUNDARY, Math.min(W - BOUNDARY, n.x));
+        n.y = Math.max(BOUNDARY, Math.min(H - BOUNDARY, n.y));
       });
     }
 
@@ -295,9 +355,18 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
 
     let drag: { node: (typeof nodes)[number]; startX: number; startY: number; nodeX: number; nodeY: number; moved: boolean } | null = null;
     let suppressClick = false;
+    let activePointerId: number | null = null;
 
-    function startDrag(e: MouseEvent, n: (typeof nodes)[number]) {
+    function capturePointer(e: PointerEvent) {
+      activePointerId = e.pointerId;
+      svg?.setPointerCapture(e.pointerId);
+    }
+
+    function startDrag(e: PointerEvent, n: (typeof nodes)[number]) {
+      if (e.button !== 0) return;
       e.preventDefault();
+      e.stopPropagation();
+      capturePointer(e);
       drag = { node: n, startX: e.clientX, startY: e.clientY, nodeX: n.x, nodeY: n.y, moved: false };
       n.vx = 0;
       n.vy = 0;
@@ -312,14 +381,15 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
     let panTX = 0;
     let panTY = 0;
 
-    window.addEventListener('mousemove', (e) => {
+    svg?.addEventListener('pointermove', (e) => {
+      if (activePointerId !== e.pointerId) return;
       if (drag) {
         const rect = svg!.getBoundingClientRect();
         const dx = e.clientX - drag.startX;
         const dy = e.clientY - drag.startY;
         if (!drag.moved && Math.hypot(dx, dy) > 3) drag.moved = true;
-        const nx = drag.nodeX + (dx * W) / rect.width;
-        const ny = drag.nodeY + (dy * H) / rect.height;
+        const nx = drag.nodeX + (dx * W) / rect.width / k;
+        const ny = drag.nodeY + (dy * H) / rect.height / k;
         if (prefersReduced) {
           drag.node.x = nx;
           drag.node.y = ny;
@@ -337,7 +407,8 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
       }
     });
 
-    window.addEventListener('mouseup', () => {
+    function endPointer(e: PointerEvent) {
+      if (activePointerId !== e.pointerId) return;
       if (drag) {
         suppressClick = drag.moved;
         if (drag.node) {
@@ -350,9 +421,16 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
       }
       panning = false;
       if (bg) bg.style.cursor = 'grab';
-    });
+      if (svg?.hasPointerCapture(e.pointerId)) svg.releasePointerCapture(e.pointerId);
+      activePointerId = null;
+    }
 
-    bg?.addEventListener('mousedown', (e) => {
+    svg?.addEventListener('pointerup', endPointer);
+    svg?.addEventListener('pointercancel', endPointer);
+
+    bg?.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
+      capturePointer(e);
       panning = true;
       panStartX = e.clientX;
       panStartY = e.clientY;
@@ -379,13 +457,7 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
       { passive: false },
     );
 
-    bg?.addEventListener('dblclick', () => {
-      tx = 0;
-      ty = 0;
-      k = 1;
-      applyTransform();
-      setFocus(null);
-    });
+    bg?.addEventListener('dblclick', resetView);
 
     function setCamera(cx: number, cy: number, ck: number, animate: boolean) {
       const targetTX = W / 2 - ck * cx;
@@ -416,15 +488,30 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
       focusedId = id;
       if (id) {
         const n = nodeById.get(id);
-        if (n) setCamera(n.x, n.y, 1.7, true);
+        if (n) setCamera(n.x, n.y, compact ? 1.55 : 1.7, true);
       }
       applyOpacity();
     }
 
+    function resetView() {
+      setFocus(null);
+      setCamera(W / 2, H / 2, 1, true);
+    }
+
+    function zoomView(factor: number) {
+      const centerX = (W / 2 - tx) / k;
+      const centerY = (H / 2 - ty) / k;
+      setCamera(centerX, centerY, Math.min(4, Math.max(0.55, k * factor)), true);
+    }
+
     function applyOpacity() {
       if (!focusedId) {
-        nodes.forEach((n) => n.el?.classList.remove('hl', 'dim'));
+        nodes.forEach((n) => {
+          n.el?.classList.remove('hl', 'dim');
+          if (n.type === 'tag') n.el?.setAttribute('aria-pressed', 'false');
+        });
         edges.forEach((e) => e.el?.classList.remove('hl', 'dim'));
+        if (status) status.textContent = defaultStatus;
         return;
       }
       const f = nodeById.get(focusedId);
@@ -438,16 +525,22 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
         const on = active.has(n.id);
         n.el?.classList.toggle('dim', !on);
         n.el?.classList.toggle('hl', n.id === focusedId);
+        if (n.type === 'tag') n.el?.setAttribute('aria-pressed', String(n.id === focusedId));
       });
       edges.forEach((e) => {
         const on = e.source === f || e.target === f;
         e.el?.classList.toggle('dim', !on);
         e.el?.classList.toggle('hl', on);
       });
+      if (status) status.textContent = `${f.label} · ${f.degree} 個關聯`;
     }
 
     function hover(n: (typeof nodes)[number]) {
       if (focusedId) return;
+      if (status) {
+        const typeLabel = n.type === 'tag' ? '標籤' : n.type === 'blog' ? '筆記' : '專案';
+        status.textContent = `${typeLabel}「${n.label}」· ${n.degree} 個關聯`;
+      }
       const active = new Set<string>([n.id]);
       edges.forEach((e) => {
         if (e.source === n) active.add(e.target!.id);
@@ -469,16 +562,27 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
       if (focusedId) return;
       nodes.forEach((n) => n.el?.classList.remove('hl', 'dim'));
       edges.forEach((e) => e.el?.classList.remove('hl', 'dim'));
+      if (status) status.textContent = defaultStatus;
     }
 
     function onNodeClick(n: (typeof nodes)[number]) {
       if (suppressClick) return;
       if (n.type === 'tag') {
-        setFocus(focusedId === n.id ? null : n.id);
+        if (focusedId === n.id) resetView();
+        else setFocus(n.id);
       } else if (n.url) {
         window.location.href = n.url;
       }
     }
+
+    graph.querySelectorAll<HTMLButtonElement>('[data-graph-action]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const action = button.dataset.graphAction;
+        if (action === 'zoom-in') zoomView(1.25);
+        if (action === 'zoom-out') zoomView(1 / 1.25);
+        if (action === 'reset') resetView();
+      });
+    });
 
     settle();
     render();
@@ -492,11 +596,69 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
     margin: 0 auto;
   }
 
+  .tag-graph-toolbar {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 2.25rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .tag-graph-status {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  .tag-graph-controls {
+    display: inline-flex;
+    flex-shrink: 0;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg);
+  }
+
+  .tag-graph-controls button {
+    display: grid;
+    place-items: center;
+    min-width: 2.15rem;
+    height: 2rem;
+    padding: 0 0.55rem;
+    border: 0;
+    border-left: 1px solid var(--border);
+    color: var(--muted);
+    background: transparent;
+    font: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  .tag-graph-controls button:first-child {
+    border-left: 0;
+  }
+
+  .tag-graph-controls .reset-view {
+    font-size: 0.72rem;
+  }
+
+  .tag-graph-controls button:hover {
+    color: var(--accent);
+    background: var(--accent-light);
+  }
+
+  .tag-graph-controls button:focus-visible {
+    position: relative;
+    outline: 2px solid var(--accent);
+    outline-offset: -3px;
+  }
+
   .tag-graph svg {
     display: block;
     width: 100%;
     height: auto;
-    background: var(--bg);
+    background: radial-gradient(circle at center, var(--accent-light) 0, var(--bg) 58%);
     border: 1px solid var(--border);
     border-radius: 12px;
     touch-action: none;
@@ -505,14 +667,16 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
   }
 
   .graph-bg {
-    fill: var(--bg);
+    fill: transparent;
     cursor: grab;
+    pointer-events: all;
   }
 
   :global(.edge) {
     stroke: var(--muted);
-    stroke-width: 1.5;
-    opacity: 0.85;
+    stroke-width: 1.25;
+    opacity: 0.48;
+    vector-effect: non-scaling-stroke;
     transition: stroke 0.15s ease, opacity 0.15s ease;
   }
 
@@ -535,18 +699,35 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
   :global(.node circle),
   :global(.node path),
   :global(.node rect) {
-    transition: opacity 0.15s ease;
+    stroke: var(--bg);
+    stroke-width: 2;
+    vector-effect: non-scaling-stroke;
+    transition: opacity 0.15s ease, stroke 0.15s ease;
+  }
+
+  :global(.node.hl circle),
+  :global(.node.hl path),
+  :global(.node.hl rect),
+  :global(.node:focus-visible circle),
+  :global(.node:focus-visible path),
+  :global(.node:focus-visible rect) {
+    stroke: var(--fg);
+    stroke-width: 2.5;
   }
 
   :global(.node text) {
     fill: var(--fg);
-    font-size: 12px;
-    opacity: 0.85;
+    font-size: 13px;
+    opacity: 0.88;
     pointer-events: none;
     paint-order: stroke;
     stroke: var(--bg);
     stroke-width: 3px;
     stroke-linejoin: round;
+  }
+
+  :global(.node-tag text) {
+    font-weight: 500;
   }
 
   :global(.node.hl text) {
@@ -555,7 +736,7 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
   }
 
   :global(.node.dim) {
-    opacity: 0.05;
+    opacity: 0.08;
   }
 
   :global(.node-tag circle) {
@@ -617,6 +798,35 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
     font-size: 0.8125rem;
     color: var(--muted-light);
     margin: 0.25rem 0 0;
+  }
+
+  @media (max-width: 640px) {
+    .tag-graph-toolbar {
+      align-items: flex-start;
+    }
+
+    .tag-graph-status {
+      padding-top: 0.35rem;
+      line-height: 1.45;
+    }
+
+    :global(.node text) {
+      font-size: 15px;
+      stroke-width: 4px;
+    }
+
+    :global(.node-blog text),
+    :global(.node-project text) {
+      font-size: 14px;
+    }
+
+    .tag-graph-legend {
+      gap: 0.75rem 1rem;
+    }
+
+    .tag-graph-hint {
+      line-height: 1.6;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
