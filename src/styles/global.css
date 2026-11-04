@@ -43,7 +43,7 @@ main {
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
-  padding: 3rem 1.5rem;
+  padding: 3rem max(1.5rem, env(safe-area-inset-right)) 3rem max(1.5rem, env(safe-area-inset-left));
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -161,12 +161,18 @@ th {
     font-size: 18px;
   }
   main {
-    padding: 2rem 1rem;
+    padding: 2rem max(1rem, env(safe-area-inset-right)) 2rem max(1rem, env(safe-area-inset-left));
   }
   h1 { font-size: 2rem; }
   h2 { font-size: 1.5rem; }
   blockquote {
     padding: 0.75rem 0 0.75rem 1rem;
     font-size: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }

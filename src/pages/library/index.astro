@@ -51,6 +51,7 @@ const shelves = Array.from(
           <span>COLLECTION No. 2718</span>
           <span aria-hidden="true">✦</span>
         </div>
+        <p class="shelf-swipe-hint">左右滑動查看完整書架</p>
 
         <div id="bookshelf" class="bookshelf">
           {shelves.map((shelf, shelfIndex) => (
@@ -261,6 +262,10 @@ const shelves = Array.from(
       #f9f5ef;
   }
 
+  .shelf-swipe-hint {
+    display: none;
+  }
+
   .shelf-row {
     position: relative;
     min-height: 278px;
@@ -354,11 +359,23 @@ const shelves = Array.from(
       padding-left: 0.25rem;
     }
 
+    .shelf-swipe-hint {
+      display: block;
+      margin: -0.35rem 0 0.5rem;
+      color: #79614d;
+      font-size: 0.75rem;
+      text-align: center;
+    }
+
     .shelf-row {
       min-height: 250px;
       padding-right: 0.4rem;
       padding-left: 0.4rem;
       overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      scroll-snap-type: x proximity;
+      scrollbar-color: #c5a281 transparent;
+      scrollbar-width: thin;
     }
 
     .shelf-row ol {
@@ -372,6 +389,14 @@ const shelves = Array.from(
 
     .search-field {
       grid-template-columns: auto 1fr;
+    }
+
+    .search-field input {
+      font-size: 1rem;
+    }
+
+    :global(.book-slot) {
+      scroll-snap-align: start;
     }
   }
 </style>

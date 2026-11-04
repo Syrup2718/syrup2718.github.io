@@ -92,7 +92,7 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
     <li><span class="lg-blog" />筆記文章</li>
     <li><span class="lg-project" />專案</li>
   </ul>
-  <p class="tag-graph-hint" id="tag-graph-hint">拖曳節點調整位置，拖曳空白處移動畫面；點擊標籤查看關聯，點擊文章或專案前往內容</p>
+  <p class="tag-graph-hint" id="tag-graph-hint">拖曳節點調整位置，點擊標籤查看關聯；鍵盤可用方向鍵切換節點</p>
 </div>
 
 <script>
@@ -174,7 +174,7 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
       return label.length > limit ? `${label.slice(0, limit - 1)}…` : label;
     }
 
-    nodes.forEach((n) => {
+    nodes.forEach((n, nodeIndex) => {
       const g = document.createElementNS(SVG_NS, 'g');
       let shape: SVGElement;
       if (n.type === 'project') {
@@ -201,7 +201,7 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
       text.textContent = compactLabel(n.label, n.type === 'tag' ? 15 : 18);
       g.appendChild(text);
       g.classList.add('node', `node-${n.type}`);
-      g.setAttribute('tabindex', '0');
+      g.setAttribute('tabindex', nodeIndex === 0 ? '0' : '-1');
       g.setAttribute('role', n.type === 'tag' ? 'button' : 'link');
       g.setAttribute(
         'aria-label',
@@ -217,15 +217,48 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
       g.addEventListener('click', () => onNodeClick(n));
       g.addEventListener('mouseenter', () => hover(n));
       g.addEventListener('mouseleave', clearHover);
-      g.addEventListener('focus', () => hover(n));
+      g.addEventListener('focus', () => {
+        setNodeTabStop(nodeIndex);
+        hover(n);
+      });
       g.addEventListener('blur', clearHover);
       g.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           onNodeClick(n);
+          return;
+        }
+
+        const nextIndex =
+          e.key === 'ArrowRight' || e.key === 'ArrowDown'
+            ? nodeIndex + 1
+            : e.key === 'ArrowLeft' || e.key === 'ArrowUp'
+              ? nodeIndex - 1
+              : e.key === 'Home'
+                ? 0
+                : e.key === 'End'
+                  ? nodes.length - 1
+                  : null;
+
+        if (nextIndex != null) {
+          e.preventDefault();
+          focusNode(nextIndex);
         }
       });
     });
+
+    function setNodeTabStop(index: number) {
+      nodes.forEach((node, nodeIndex) => {
+        node.el?.setAttribute('tabindex', nodeIndex === index ? '0' : '-1');
+      });
+    }
+
+    function focusNode(index: number) {
+      if (nodes.length === 0) return;
+      const normalizedIndex = (index + nodes.length) % nodes.length;
+      setNodeTabStop(normalizedIndex);
+      nodes[normalizedIndex].el?.focus();
+    }
 
     let tx = 0;
     let ty = 0;
@@ -623,8 +656,8 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
   .tag-graph-controls button {
     display: grid;
     place-items: center;
-    min-width: 2.15rem;
-    height: 2rem;
+    min-width: 2.75rem;
+    height: 2.75rem;
     padding: 0 0.55rem;
     border: 0;
     border-left: 1px solid var(--border);
@@ -661,7 +694,7 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
     background: radial-gradient(circle at center, var(--accent-light) 0, var(--bg) 58%);
     border: 1px solid var(--border);
     border-radius: 12px;
-    touch-action: none;
+    touch-action: pan-y;
     user-select: none;
     -webkit-user-select: none;
   }
