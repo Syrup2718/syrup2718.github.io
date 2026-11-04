@@ -1,0 +1,119 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <BaseHead
+      title={`找不到頁面 | ${SITE_TITLE}`}
+      description="這個頁面不存在，回到糖漿の小窩繼續逛逛吧。"
+    />
+  </head>
+  <body>
+    <Header />
+    <main class="error-page">
+      <section class="error-content" aria-labelledby="error-title">
+        <p class="error-code" aria-hidden="true">404</p>
+        <h1 id="error-title">這個角落找不到了</h1>
+        <p class="error-message">
+          你要找的頁面可能搬家了，或是從來沒有在這裡住過。回到小窩，再慢慢逛逛吧。
+        </p>
+        <nav class="error-actions" aria-label="找不到頁面的後續選項">
+          <a class="primary-action" href="/">回到首頁</a>
+          <a class="secondary-action" href="/blog/">查看筆記</a>
+        </nav>
+      </section>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .error-page {
+    display: grid;
+    min-height: calc(100vh - 14rem);
+    place-items: center;
+  }
+
+  .error-content {
+    width: min(100%, 34rem);
+    text-align: center;
+  }
+
+  .error-code {
+    margin: 0 0 0.75rem;
+    color: var(--muted);
+    font-size: clamp(4rem, 16vw, 6rem);
+    font-weight: 500;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+  }
+
+  .error-content h1 {
+    margin-bottom: 1rem;
+  }
+
+  .error-message {
+    margin: 0 auto;
+    max-width: 30rem;
+    color: var(--fg);
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .error-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .error-actions a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--fg);
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.4;
+    text-decoration: none;
+  }
+
+  .primary-action {
+    background: var(--accent-light);
+  }
+
+  .secondary-action {
+    background: transparent;
+  }
+
+  .error-actions a:hover {
+    border-color: var(--accent);
+    background: var(--accent-light);
+    color: var(--fg);
+  }
+
+  .error-actions a:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 420px) {
+    .error-actions {
+      flex-direction: column;
+    }
+
+    .error-actions a {
+      width: 100%;
+    }
+  }
+</style>
