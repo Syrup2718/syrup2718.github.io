@@ -288,7 +288,7 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
     const DAMPING = 0.8;
     const BOUNDARY = compact ? 42 : 54;
 
-    function step() {
+    function step(frameScale = 1) {
       nodes.forEach((n) => {
         n.ax = 0;
         n.ay = 0;
@@ -346,10 +346,11 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
         }
         n.ax += (W / 2 - n.x) * CENTER;
         n.ay += (H / 2 - n.y) * CENTER;
-        n.vx = (n.vx + n.ax) * DAMPING;
-        n.vy = (n.vy + n.ay) * DAMPING;
-        n.x += n.vx;
-        n.y += n.vy;
+        const damping = Math.pow(DAMPING, frameScale);
+        n.vx = (n.vx + n.ax * frameScale) * damping;
+        n.vy = (n.vy + n.ay * frameScale) * damping;
+        n.x += n.vx * frameScale;
+        n.y += n.vy * frameScale;
         n.x = Math.max(BOUNDARY, Math.min(W - BOUNDARY, n.x));
         n.y = Math.max(BOUNDARY, Math.min(H - BOUNDARY, n.y));
       });
@@ -362,8 +363,11 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
       if (running || prefersReduced) return;
       running = true;
       let idleFrames = 0;
-      function loop() {
-        step();
+      let previousTime = performance.now();
+      function loop(now: number) {
+        const frameScale = Math.min(2, Math.max(0.5, (now - previousTime) / (1000 / 60)));
+        previousTime = now;
+        step(frameScale);
         render();
         let speed = 0;
         nodes.forEach((n) => (speed += Math.abs(n.vx) + Math.abs(n.vy)));
@@ -389,6 +393,9 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
     let drag: { node: (typeof nodes)[number]; startX: number; startY: number; nodeX: number; nodeY: number; moved: boolean } | null = null;
     let suppressClick = false;
     let activePointerId: number | null = null;
+    let pointerX = 0;
+    let pointerY = 0;
+    let interactionRaf = 0;
 
     function capturePointer(e: PointerEvent) {
       activePointerId = e.pointerId;
@@ -401,6 +408,8 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
       e.stopPropagation();
       capturePointer(e);
       drag = { node: n, startX: e.clientX, startY: e.clientY, nodeX: n.x, nodeY: n.y, moved: false };
+      pointerX = e.clientX;
+      pointerY = e.clientY;
       n.vx = 0;
       n.vy = 0;
       n.fx = n.x;
@@ -414,34 +423,55 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
     let panTX = 0;
     let panTY = 0;
 
-    svg?.addEventListener('pointermove', (e) => {
-      if (activePointerId !== e.pointerId) return;
+    function flushInteractionFrame() {
+      interactionRaf = 0;
+      const rect = svg!.getBoundingClientRect();
       if (drag) {
-        const rect = svg!.getBoundingClientRect();
-        const dx = e.clientX - drag.startX;
-        const dy = e.clientY - drag.startY;
-        if (!drag.moved && Math.hypot(dx, dy) > 3) drag.moved = true;
+        const dx = pointerX - drag.startX;
+        const dy = pointerY - drag.startY;
         const nx = drag.nodeX + (dx * W) / rect.width / k;
         const ny = drag.nodeY + (dy * H) / rect.height / k;
+        drag.node.fx = nx;
+        drag.node.fy = ny;
         if (prefersReduced) {
           drag.node.x = nx;
           drag.node.y = ny;
           render();
-        } else {
-          drag.node.fx = nx;
-          drag.node.fy = ny;
-          if (!running) startSimulation();
+        } else if (!running) {
+          startSimulation();
         }
       } else if (panning) {
-        const rect = svg!.getBoundingClientRect();
-        tx = panTX + ((e.clientX - panStartX) * W) / rect.width;
-        ty = panTY + ((e.clientY - panStartY) * H) / rect.height;
+        tx = panTX + ((pointerX - panStartX) * W) / rect.width;
+        ty = panTY + ((pointerY - panStartY) * H) / rect.height;
         applyTransform();
       }
+    }
+
+    function scheduleInteractionFrame() {
+      if (interactionRaf) return;
+      interactionRaf = requestAnimationFrame(flushInteractionFrame);
+    }
+
+    svg?.addEventListener('pointermove', (e) => {
+      if (activePointerId !== e.pointerId) return;
+      pointerX = e.clientX;
+      pointerY = e.clientY;
+      if (drag) {
+        const dx = e.clientX - drag.startX;
+        const dy = e.clientY - drag.startY;
+        if (!drag.moved && Math.hypot(dx, dy) > 3) drag.moved = true;
+      }
+      scheduleInteractionFrame();
     });
 
     function endPointer(e: PointerEvent) {
       if (activePointerId !== e.pointerId) return;
+      pointerX = e.clientX;
+      pointerY = e.clientY;
+      if (interactionRaf) {
+        cancelAnimationFrame(interactionRaf);
+        flushInteractionFrame();
+      }
       if (drag) {
         suppressClick = drag.moved;
         if (drag.node) {
@@ -463,36 +493,62 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
 
     bg?.addEventListener('pointerdown', (e) => {
       if (e.button !== 0) return;
+      cancelCameraAnimation();
       capturePointer(e);
       panning = true;
       panStartX = e.clientX;
       panStartY = e.clientY;
+      pointerX = e.clientX;
+      pointerY = e.clientY;
       panTX = tx;
       panTY = ty;
       bg.style.cursor = 'grabbing';
       e.preventDefault();
     });
 
+    let wheelRaf = 0;
+    let wheelDelta = 0;
+    let wheelX = W / 2;
+    let wheelY = H / 2;
+
     svg?.addEventListener(
       'wheel',
       (e) => {
         e.preventDefault();
         const rect = svg.getBoundingClientRect();
-        const vx = ((e.clientX - rect.left) / rect.width) * W;
-        const vy = ((e.clientY - rect.top) / rect.height) * H;
-        const factor = e.deltaY < 0 ? 1.12 : 1 / 1.12;
-        const nk = Math.min(4, Math.max(0.4, k * factor));
-        tx = vx - ((vx - tx) / k) * nk;
-        ty = vy - ((vy - ty) / k) * nk;
-        k = nk;
-        applyTransform();
+        wheelX = ((e.clientX - rect.left) / rect.width) * W;
+        wheelY = ((e.clientY - rect.top) / rect.height) * H;
+        const unit = e.deltaMode === WheelEvent.DOM_DELTA_LINE ? 16 : e.deltaMode === WheelEvent.DOM_DELTA_PAGE ? rect.height : 1;
+        wheelDelta += e.deltaY * unit;
+        if (!wheelRaf) {
+          wheelRaf = requestAnimationFrame(() => {
+            wheelRaf = 0;
+            cancelCameraAnimation();
+            const factor = Math.exp(Math.max(-120, Math.min(120, -wheelDelta)) * 0.0022);
+            wheelDelta = 0;
+            const nk = Math.min(4, Math.max(0.4, k * factor));
+            tx = wheelX - ((wheelX - tx) / k) * nk;
+            ty = wheelY - ((wheelY - ty) / k) * nk;
+            k = nk;
+            applyTransform();
+          });
+        }
       },
       { passive: false },
     );
 
     bg?.addEventListener('dblclick', resetView);
 
+    let cameraRaf = 0;
+
+    function cancelCameraAnimation() {
+      if (!cameraRaf) return;
+      cancelAnimationFrame(cameraRaf);
+      cameraRaf = 0;
+    }
+
     function setCamera(cx: number, cy: number, ck: number, animate: boolean) {
+      cancelCameraAnimation();
       const targetTX = W / 2 - ck * cx;
       const targetTY = H / 2 - ck * cy;
       if (animate && !prefersReduced) {
@@ -504,9 +560,10 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
           ty = st.ty + (targetTY - st.ty) * e;
           k = st.k + (ck - st.k) * e;
           applyTransform();
-          if (p < 1) requestAnimationFrame(tick);
+          if (p < 1) cameraRaf = requestAnimationFrame(tick);
+          else cameraRaf = 0;
         }
-        requestAnimationFrame(tick);
+        cameraRaf = requestAnimationFrame(tick);
       } else {
         tx = targetTX;
         ty = targetTY;
@@ -726,6 +783,7 @@ const dataJson = JSON.stringify({ nodes: rawNodes, edges: rawEdges });
   :global(.node) {
     cursor: pointer;
     outline: none;
+    touch-action: none;
     transition: opacity 0.15s ease;
   }
 
