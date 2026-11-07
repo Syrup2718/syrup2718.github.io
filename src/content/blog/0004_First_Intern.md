@@ -1,8 +1,8 @@
 ---
 title: '第一次實習的第一個月！'
 description: '嗚嗚嗚上班累累'
-pubDate: 'Aug 27 2026'
-heroImage: '../../assets/blog-placeholder-4.jpg'
+pubDate: 'Oct 01 2026'
+heroImage: '../../assets/blog-placeholder-5.jpg'
 tags: ['Intern', '紀錄', '心得']
 ---
 
