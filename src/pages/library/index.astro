@@ -8,11 +8,6 @@ import Header from '../../components/Header.astro';
 const books = (await getCollection('library')).sort(
   (a, b) => b.data.finishedDate.valueOf() - a.data.finishedDate.valueOf(),
 );
-const shelfSize = 9;
-const shelves = Array.from(
-  { length: Math.ceil(books.length / shelfSize) },
-  (_, index) => books.slice(index * shelfSize, (index + 1) * shelfSize),
-);
 ---
 
 <!doctype html>
@@ -51,18 +46,16 @@ const shelves = Array.from(
           <span>COLLECTION No. 2718</span>
           <span aria-hidden="true">✦</span>
         </div>
-        <p class="shelf-swipe-hint">左右滑動查看完整書架</p>
-
         <div id="bookshelf" class="bookshelf">
-          {shelves.map((shelf, shelfIndex) => (
+          {books.length > 0 && (
             <div class="shelf-row" data-shelf>
-              <ol aria-label={`第 ${shelfIndex + 1} 層書架`}>
-                {shelf.map((book, bookIndex) => (
-                  <BookSpine book={book} index={shelfIndex * shelfSize + bookIndex} />
+              <ol aria-label="藏書">
+                {books.map((book, bookIndex) => (
+                  <BookSpine book={book} index={bookIndex} />
                 ))}
               </ol>
             </div>
-          ))}
+          )}
 
           {books.length === 0 && (
             <div class="empty-library">
@@ -262,37 +255,36 @@ const shelves = Array.from(
       #f9f5ef;
   }
 
-  .shelf-swipe-hint {
-    display: none;
-  }
-
   .shelf-row {
     position: relative;
-    min-height: 278px;
-    padding: 1rem 1.3rem 20px;
-  }
-
-  .shelf-row::after {
-    content: '';
-    position: absolute;
-    right: -1rem;
-    bottom: 0;
-    left: -1rem;
-    height: 20px;
-    border-top: 1px solid #a98769;
-    border-bottom: 3px solid #a98769;
-    background: linear-gradient(#d6b99c, #c5a281);
-    box-shadow: 0 7px 0 rgba(96, 65, 42, 0.08);
   }
 
   .shelf-row ol {
     display: flex;
-    align-items: flex-end;
-    gap: 4px;
-    min-height: 246px;
+    flex-wrap: wrap;
+    gap: 0 4px;
+    justify-content: start;
     margin: 0;
     padding: 0;
     list-style: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 258px,
+      #a98769 258px,
+      #d6b99c 259px,
+      #c5a281 275px,
+      #a98769 275px,
+      #a98769 278px
+    );
+    box-shadow: 0 7px 0 rgba(96, 65, 42, 0.08);
+  }
+
+  .shelf-row :global(.book-slot) {
+    flex: 0 0 auto;
+    justify-content: center;
+    height: 278px;
+    padding-bottom: 20px;
   }
 
   .empty-library {
@@ -362,28 +354,8 @@ const shelves = Array.from(
       padding-left: 0.25rem;
     }
 
-    .shelf-swipe-hint {
-      display: block;
-      margin: -0.35rem 0 0.5rem;
-      color: #79614d;
-      font-size: 0.75rem;
-      text-align: center;
-    }
-
-    .shelf-row {
-      min-height: 250px;
-      padding-right: 0.4rem;
-      padding-left: 0.4rem;
-      overflow-x: auto;
-      overscroll-behavior-inline: contain;
-      scroll-snap-type: x proximity;
-      scrollbar-color: #c5a281 transparent;
-      scrollbar-width: thin;
-    }
-
     .shelf-row ol {
-      min-width: max-content;
-      min-height: 218px;
+      justify-content: center;
     }
 
     .search-field kbd {
@@ -398,8 +370,5 @@ const shelves = Array.from(
       font-size: 1rem;
     }
 
-    :global(.book-slot) {
-      scroll-snap-align: start;
-    }
   }
 </style>
