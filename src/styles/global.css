@@ -41,6 +41,7 @@ body {
 
 main {
   width: 100%;
+  min-width: 0;
   max-width: 800px;
   margin: 0 auto;
   padding: 3rem max(1.5rem, env(safe-area-inset-right)) 3rem max(1.5rem, env(safe-area-inset-left));
@@ -79,6 +80,7 @@ code {
   padding: 0.125em 0.375em;
   background: var(--accent-light);
   border-radius: 3px;
+  overflow-wrap: anywhere;
 }
 
 pre {
@@ -95,6 +97,7 @@ pre code {
   background: none;
   font-size: 0.875rem;
   line-height: 1.7;
+  overflow-wrap: normal;
 }
 
 blockquote {
@@ -168,6 +171,16 @@ th {
   blockquote {
     padding: 0.75rem 0 0.75rem 1rem;
     font-size: 1rem;
+  }
+
+  table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-color: var(--accent) transparent;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
   }
 }
 

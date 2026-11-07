@@ -49,18 +49,18 @@ const projects = (await getCollection('projects')).sort(
               <p style="margin: 0 0 1rem; color: var(--muted); font-size: 1rem; line-height: 1.7;">
                 {project.data.description}
               </p>
-              <div style="display: flex; flex-wrap: wrap; gap: 1rem; font-size: 0.875rem;">
-                <time style="color: var(--muted);">
+              <div class="project-meta">
+                <time>
                   {project.data.pubDate.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })}
                   {project.data.updatedDate && ` · 更新於 ${project.data.updatedDate.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })}`}
                 </time>
                 {project.data.github && (
-                  <a href={project.data.github} target="_blank" rel="noopener" style="color: var(--accent);">
+                  <a href={project.data.github} target="_blank" rel="noopener">
                     GitHub
                   </a>
                 )}
                 {project.data.demo && (
-                  <a href={project.data.demo} target="_blank" rel="noopener" style="color: var(--accent);">
+                  <a href={project.data.demo} target="_blank" rel="noopener">
                     Demo
                   </a>
                 )}
@@ -79,3 +79,32 @@ const projects = (await getCollection('projects')).sort(
     <Footer />
   </body>
 </html>
+
+<style>
+  .project-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    align-items: center;
+    font-size: 0.875rem;
+  }
+
+  .project-meta time {
+    color: var(--muted);
+  }
+
+  .project-meta a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    padding: 0 0.25rem;
+    margin: -0.35rem -0.25rem;
+    color: var(--accent);
+  }
+
+  @media (max-width: 640px) {
+    .project-meta time {
+      flex: 1 0 100%;
+    }
+  }
+</style>

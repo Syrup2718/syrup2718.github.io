@@ -44,7 +44,7 @@ const allProjects = await getCollection('projects');
             <h2 style="font-size: 1.25rem; font-weight: 500; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); flex: 1;">
               最近筆記
             </h2>
-            <a href="/blog" style="font-size: 0.875rem; color: var(--accent); font-weight: 500; text-decoration: none;">
+            <a class="section-link" href="/blog" style="font-size: 0.875rem; color: var(--accent); font-weight: 500; text-decoration: none;">
               查看全部 →
             </a>
           </header>
@@ -74,7 +74,7 @@ const allProjects = await getCollection('projects');
             <h2 style="font-size: 1.25rem; font-weight: 500; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); flex: 1;">
               專案作品
             </h2>
-            <a href="/projects" style="font-size: 0.875rem; color: var(--accent); font-weight: 500; text-decoration: none;">
+            <a class="section-link" href="/projects" style="font-size: 0.875rem; color: var(--accent); font-weight: 500; text-decoration: none;">
               查看全部 →
             </a>
           </header>
@@ -115,3 +115,13 @@ const allProjects = await getCollection('projects');
     <Footer />
   </body>
 </html>
+
+<style>
+  .section-link {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    padding: 0 0.25rem;
+    margin: -0.5rem -0.25rem;
+  }
+</style>
